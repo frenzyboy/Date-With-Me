@@ -1,3 +1,5 @@
+<!-- Head: page title, fonts and styles.
+     No <html>/<head>/<body> tags: the artifact publish step wraps the page. -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Temporary Date Reservation</title>
@@ -7,332 +9,14 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=DM+Mono:wght@400;500&family=Nunito:wght@400;600;700;800&family=Poppins:wght@400&display=swap">
-<style>
-  /* Layout: one "official form" card on blush paper, one step at a time, with a ticket stub at the end.
-     The page always uses this one pink paper look and does not switch to a dark theme. */
-  :root {
-    --paper: #fbe3e9;
-    --paper-dot: #f5c9d4;
-    --card: #fffbfc;
-    --ink: #3f1229;
-    --muted: #84566b;
-    --line: #efc3cf;
-    --accent: #df3567;
-    --accent-ink: #ffffff;
-    --accent-soft: #fde0e8;
-    --stamp: #1f7a68;
-    --display: "Bagel Fat One", "Arial Rounded MT Bold", "Trebuchet MS", system-ui, sans-serif;
-    --body: "Nunito", "Segoe UI", system-ui, -apple-system, sans-serif;
-    --mono: "DM Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
-    color-scheme: light;
-  }
-  /* Base reset so the page also works when hosted outside claude.ai (e.g. Cloudflare) */
-  [hidden] { display: none !important; }
-  body { margin: 0; }
-  img { max-width: 100%; }
-  html, body { min-height: 100%; }
-  html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
-  * { -webkit-tap-highlight-color: transparent; }
-  *, *::before, *::after { box-sizing: border-box; }
-  body {
-    overflow-x: hidden;
-    overflow-x: clip;
-    background-color: var(--paper);
-    background-image: radial-gradient(var(--paper-dot) 1.2px, transparent 1.3px);
-    background-size: 22px 22px;
-    color: var(--ink);
-    font-family: var(--body);
-    font-size: 16px;
-    line-height: 1.55;
-  }
-  .wrap {
-    max-width: 540px;
-    margin: 0 auto;
-    padding-block: 28px 48px;
-    padding-left: max(16px, env(safe-area-inset-left, 0px));
-    padding-right: max(16px, env(safe-area-inset-right, 0px));
-    display: grid;
-    gap: 16px;
-  }
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/steps.css">
+<link rel="stylesheet" href="css/bear.css">
+<link rel="stylesheet" href="css/responsive.css">
 
-  /* Form header */
-  .masthead { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
-  .masthead .sys { font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
-  .masthead .sys b { color: var(--accent); font-weight: 500; }
-
-  .progress { display: grid; gap: 6px; }
-  .progress .bar { height: 8px; border-radius: 99px; background: var(--card); border: 1px solid var(--line); overflow: hidden; }
-  .progress .fill { height: 100%; width: 0; background: var(--accent); border-radius: 99px; transition: width .5s cubic-bezier(.3,1.4,.5,1); }
-  .progress .meta { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 12px; color: var(--muted); }
-
-  .card {
-    background: var(--card);
-    border: 1.5px solid var(--line);
-    border-radius: 18px;
-    box-shadow: 0 10px 30px -18px rgba(63, 18, 41, .45);
-    padding: 26px 22px;
-    display: grid;
-    gap: 18px;
-    position: relative;
-  }
-  .card > * { min-width: 0; }
-  .card.enter { animation: enter .45s ease both; }
-  @keyframes enter { from { transform: translateY(10px) rotate(-.4deg); opacity: .4; } to { transform: none; opacity: 1; } }
-
-  .eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); }
-  h1, h2 { font-family: var(--display); font-weight: 400; line-height: 1.1; margin: 0; text-wrap: balance; letter-spacing: .005em; }
-  h1 { font-size: clamp(2rem, 8vw, 2.7rem); }
-  h2 { font-size: clamp(1.55rem, 6vw, 2rem); }
-  h1:focus, h2:focus { outline: none; }
-  p { margin: 0; }
-  .lead { font-size: 1.08rem; }
-  .small { font-size: .88rem; color: var(--muted); }
-  .fine { font-family: var(--mono); font-size: 12px; color: var(--muted); line-height: 1.6; }
-  .hl { color: var(--accent); }
-
-  /* Buttons */
-  .actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; justify-content: space-between; }
-  button { font: inherit; cursor: pointer; }
-  .btn {
-    border: 0; border-radius: 99px; padding: 13px 24px;
-    font-weight: 800; font-size: 1rem;
-    background: var(--accent); color: var(--accent-ink);
-    box-shadow: 0 4px 0 #a81f48;
-    transition: transform .12s, box-shadow .12s, opacity .2s;
-  }
-  .btn { touch-action: manipulation; min-height: 48px; }
-  @media (hover: hover) { .btn:hover { transform: translateY(-1px); } }
-  .btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #a81f48; }
-  .btn:disabled { opacity: .4; cursor: not-allowed; transform: none; box-shadow: 0 4px 0 #a81f48; }
-  .btn.ghost { background: transparent; color: var(--muted); box-shadow: none; padding-inline: 8px; font-weight: 700; }
-  .btn.ghost:hover { color: var(--ink); }
-  :focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 8px; }
-
-  /* Fields */
-  .field { display: grid; gap: 6px; }
-  .label { font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
-  .value-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 12px 14px; border: 1.5px dashed var(--line); border-radius: 12px; flex-wrap: wrap; }
-  .value-row strong { font-size: 1.15rem; font-weight: 800; }
-  .verified { font-family: var(--mono); font-size: 12px; color: var(--stamp); border: 1.5px solid var(--stamp); border-radius: 6px; padding: 2px 8px; transform: rotate(-3deg); }
-  .check { display: flex; gap: 12px; align-items: flex-start; padding: 12px 14px; background: var(--accent-soft); border-radius: 12px; cursor: pointer; }
-  .check input { width: 20px; height: 20px; accent-color: var(--accent); margin-top: 2px; flex: none; cursor: pointer; }
-  .note { min-height: 1.4em; font-size: .9rem; color: var(--accent); font-weight: 700; }
-
-  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
-  .photo-drop {
-    display: flex; align-items: center; gap: 14px; cursor: pointer;
-    padding: 12px 14px; border: 1.5px dashed var(--accent); border-radius: 12px; background: #fff;
-  }
-  .photo-drop:hover { background: var(--accent-soft); }
-  #selfie:focus-visible + .fine, .photo-drop:focus-within { outline: 3px solid var(--accent); outline-offset: 3px; }
-  .photo-thumb {
-    flex: none; width: 64px; height: 64px; border-radius: 50%; overflow: hidden;
-    display: grid; place-items: center; background: var(--accent-soft); font-size: 1.6rem;
-  }
-  .photo-thumb img { width: 100%; height: 100%; object-fit: cover; }
-  .photo-text { display: grid; gap: 2px; min-width: 0; }
-  .no-back-note { text-align: left; min-height: 0; }
-  .no-back-note:empty { display: none; }
-  #noBackBtn.shake { animation: shake .5s ease; }
-  #noBackBtn.locked { text-decoration: line-through; opacity: .6; }
-  .name-row { position: relative; }
-  .name-row .verified { position: absolute; right: 12px; top: 50%; translate: 0 -50%; }
-  .name-row input { padding-right: 110px; }
-  input[type="text"]::placeholder { color: var(--muted); font-weight: 600; opacity: .7; }
-  input[type="text"],
-  input[type="date"] {
-    font: inherit; font-weight: 700; color: var(--ink);
-    padding: 12px 14px; border-radius: 12px; border: 1.5px solid var(--line); background: #fff; width: 100%;
-    display: block; min-height: 50px; font-size: 16px;
-    -webkit-appearance: none; appearance: none;
-  }
-  input[type="date"]::-webkit-date-and-time-value { text-align: left; }
-
-  /* Choice tiles */
-  .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
-  .grid.one { grid-template-columns: 1fr; }
-  .tile {
-    text-align: left; background: #fff; color: var(--ink);
-    border: 1.5px solid var(--line); border-radius: 14px; padding: 14px;
-    display: grid; gap: 2px; transition: border-color .15s, background .15s, transform .15s;
-  }
-  @media (hover: hover) {
-    .tile:hover { border-color: var(--accent); transform: translateY(-1px); }
-  }
-  .tile:active { transform: scale(.98); }
-  .tile .emo { font-size: 1.6rem; line-height: 1.2; }
-  .tile .t { font-weight: 800; }
-  .tile .s { font-size: .85rem; color: var(--muted); }
-  .tile { position: relative; overflow: hidden; }
-  .tile .deny {
-    position: absolute; inset: 0; display: grid; place-items: center; text-align: center;
-    padding: 8px; background: rgba(255, 251, 252, .88);
-    font-family: var(--mono); font-size: 11px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase;
-    color: var(--accent);
-  }
-  .tile .deny b {
-    display: inline-block; border: 2px solid var(--accent); border-radius: 8px; padding: 4px 8px;
-    transform: rotate(-8deg); line-height: 1.35;
-  }
-  .tile.denied { border-color: var(--accent); border-style: dashed; }
-  .tile.denied .t, .tile.denied .s { text-decoration: line-through; }
-  .tile.shake { animation: shake .5s ease; }
-  .tile.shake .deny b { animation: stampIn .45s cubic-bezier(.3,1.6,.5,1) both; }
-  @keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    20% { transform: translateX(-7px) rotate(-1deg); }
-    40% { transform: translateX(7px) rotate(1deg); }
-    60% { transform: translateX(-5px); }
-    80% { transform: translateX(4px); }
-  }
-  @keyframes stampIn { from { transform: rotate(-8deg) scale(2.2); opacity: 0; } to { transform: rotate(-8deg) scale(1); opacity: 1; } }
-  .note.warn { color: var(--accent); }
-  .note.warn::before { content: "⚠️ "; }
-  .tile[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); box-shadow: inset 0 0 0 1.5px var(--accent); }
-  .tile.row { grid-template-columns: auto 1fr; align-items: center; column-gap: 12px; }
-  .tile.row .emo { grid-row: span 2; }
-
-  /* Terms */
-  .terms {
-    max-height: 260px; overflow-y: auto; margin: 0; padding: 14px 14px 14px 40px;
-    border: 1.5px solid var(--line); border-radius: 12px; background: #fff;
-    display: grid; gap: 10px; font-size: .93rem;
-  }
-  .terms li::marker { font-family: var(--mono); color: var(--accent); }
-
-  /* Processing + question */
-  .processing { font-family: var(--mono); font-size: 13px; color: var(--muted); display: grid; gap: 4px; }
-  .processing .ok { color: var(--stamp); }
-  .question { display: grid; gap: 18px; }
-  .question[hidden] { display: none; }
-  .answers { display: flex; gap: 14px; align-items: center; justify-content: center; flex-wrap: wrap; min-height: 120px; padding-block: 20px; }
-  .btn.no { touch-action: none; }
-  .answers { gap: 36px; }
-  .btn.yes, .btn.no { font-size: 1rem; padding: 13px 26px; min-width: 120px; }
-  .btn.yes { transition: transform .25s cubic-bezier(.3,1.6,.5,1), opacity .4s; }
-  .answers.arming .btn { opacity: .35; }
-  .btn.no { background: #fff; color: var(--muted); border: 1.5px solid var(--line); box-shadow: none; transition: left .25s ease, top .25s ease, transform .25s; z-index: 50; }
-  .btn.no.loose { position: fixed; }
-  .plead { text-align: center; min-height: 1.5em; font-weight: 700; color: var(--accent); }
-
-  /* Ticket */
-  .ticket { padding: 0; gap: 0; overflow: hidden; }
-  .ticket .top { padding: 24px 22px 20px; display: grid; gap: 12px; background: var(--accent); color: var(--accent-ink); }
-  .ticket .top .eyebrow { color: #ffe1ea; }
-  .ticket .perf { height: 0; border-top: 2px dashed var(--line); margin: 0 18px; position: relative; }
-  .ticket .perf::before, .ticket .perf::after {
-    content: ""; position: absolute; top: -13px; width: 24px; height: 24px; border-radius: 50%; background: var(--paper);
-  }
-  .ticket .perf::before { left: -31px; }
-  .ticket .perf::after { right: -31px; }
-  .ticket .body { padding: 20px 22px 24px; display: grid; gap: 14px; position: relative; }
-  .ticket dl { margin: 0; display: grid; grid-template-columns: minmax(0, auto) minmax(0, 1fr); gap: 8px 16px; }
-  .ticket dt { font-family: var(--mono); font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); padding-top: 3px; }
-  .ticket dd { margin: 0; font-weight: 800; overflow-wrap: anywhere; }
-  .ticket .no-line { font-family: var(--mono); font-size: 13px; display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; color: var(--muted); }
-  .stamp {
-    position: absolute; right: 18px; top: 18px;
-    font-family: var(--display); font-size: 1.25rem; color: var(--stamp);
-    border: 3px solid var(--stamp); border-radius: 10px; padding: 2px 10px;
-    transform: rotate(-12deg); opacity: .85; pointer-events: none;
-  }
-  .shot { text-align: center; font-weight: 800; font-size: 1.05rem; }
-  /* Silly bear: nervous → sad (on No) → happy (on Yes) */
-  .bear-wrap { display: grid; place-items: center; }
-  .bear { width: 150px; height: 150px; overflow: visible; }
-  .small-bear .bear { width: 110px; height: 110px; }
-  .bear * { transform-box: fill-box; transform-origin: center; }
-  .bear .m-sad, .bear .m-happy { display: none; }
-  .bear.sad .m-nervous, .bear.happy .m-nervous, .bear.happy .eyes-open { display: none; }
-  .bear.sad .m-sad, .bear.happy .m-happy { display: inline; }
-  .bear .b-body { transform-origin: 50% 100%; animation: sway 2.4s ease-in-out infinite; }
-  .bear .eyes-open { animation: blink 4s infinite; }
-  .bear .sweat { animation: drip 1.6s ease-in infinite; }
-  .bear.sad .b-body { animation: droop .5s ease forwards; }
-  .bear.sad .tear { animation: fall 1s ease-in infinite; }
-  .bear.sad .tear + .tear { animation-delay: .4s; }
-  .bear.happy { animation: hop .55s ease-in-out infinite; }
-  .bear.happy .b-body { animation: wiggle .55s ease-in-out infinite; }
-  .bear.happy .b-heart { animation: pulse .55s ease-in-out infinite; }
-  .bear.happy .floaty { animation: floaty 1.6s ease-out infinite; opacity: 0; }
-  .bear.happy .floaty:nth-child(2) { animation-delay: .4s; }
-  .bear.happy .floaty:nth-child(3) { animation-delay: .8s; }
-  .bear.happy .floaty:nth-child(4) { animation-delay: 1.2s; }
-  @keyframes sway { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
-  @keyframes blink { 0%, 92%, 100% { transform: scaleY(1); } 95% { transform: scaleY(.1); } }
-  @keyframes drip { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(14px); opacity: 0; } }
-  @keyframes droop { to { transform: translateY(6px) rotate(-4deg); } }
-  @keyframes fall { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(22px); opacity: 0; } }
-  @keyframes hop { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-16px); } }
-  @keyframes wiggle { 0%, 100% { transform: rotate(-6deg); } 50% { transform: rotate(6deg); } }
-  @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.18); } }
-  @keyframes floaty { 0% { transform: translateY(0) scale(.6); opacity: 0; } 20% { opacity: 1; } 100% { transform: translateY(-50px) scale(1.1); opacity: 0; } }
-  .save-row { display: grid; gap: 10px; justify-items: center; text-align: center; }
-  .save-row[hidden] { display: none; }
-  .save-row .btn { width: 100%; max-width: 340px; }
-  .portrait { margin: 18px 0 0; width: 100%; max-width: 440px; display: grid; gap: 10px; justify-items: center; }
-  .portrait canvas {
-    width: 100%; height: auto; display: block; border-radius: 16px; background: #0b0508;
-    box-shadow: 0 14px 34px -16px rgba(63, 18, 41, .6);
-  }
-  .dl-pair { display: flex; gap: 10px; width: 100%; max-width: 340px; }
-  .save-row .dl-pair .btn { flex: 1; width: auto; padding-inline: 12px; }
-  .btn.dl-black { background: #1a1014; box-shadow: 0 4px 0 #000; color: #fff; }
-  .btn.dl-white { background: #fff; color: var(--ink); border: 1.5px solid var(--line); box-shadow: 0 4px 0 var(--line); }
-  .portrait figcaption { font-family: var(--display); font-size: 1.2rem; color: var(--ink); }
-
-  .ticket .top { position: relative; padding-right: 120px; }
-
-  /* Phones */
-  @media (max-width: 420px) {
-    .wrap { padding-block: 16px 32px; gap: 12px; }
-    .card { padding: 22px 16px; gap: 16px; border-radius: 16px; }
-    .tile { padding: 12px; }
-    .tile .emo { font-size: 1.4rem; }
-    .tile .s { font-size: .8rem; }
-    .actions .btn:not(.ghost) { flex: 1; }
-    .terms { max-height: 45vh; padding-left: 34px; font-size: .9rem; }
-    .ticket .top { padding: 20px 16px 18px; padding-right: 104px; }
-    .ticket .body { padding: 18px 16px 20px; }
-    .ticket .perf { margin: 0 14px; }
-    .ticket .perf::before { left: -27px; }
-    .ticket .perf::after { right: -27px; }
-    .ticket dl { grid-template-columns: 1fr; gap: 2px; }
-    .ticket dd { margin-bottom: 8px; }
-    .stamp { font-size: 1rem; right: 12px; top: 14px; }
-  }
-
-  /* Background music toggle */
-  .music-btn {
-    position: fixed; z-index: 60;
-    top: calc(env(safe-area-inset-top, 0px) + 12px);
-    right: max(12px, calc(env(safe-area-inset-right, 0px) + 12px));
-    width: 46px; height: 46px; border-radius: 50%;
-    display: grid; place-items: center;
-    background: var(--card); color: var(--accent);
-    border: 1.5px solid var(--line);
-    box-shadow: 0 6px 16px -8px rgba(63, 18, 41, .5);
-    touch-action: manipulation;
-  }
-  .music-btn .ico-off { display: none; }
-  .music-btn.muted .ico-on { display: none; }
-  .music-btn.muted .ico-off { display: block; }
-  .music-btn.muted { color: var(--muted); }
-  .music-btn.playing::after {
-    content: ""; position: absolute; inset: -5px; border-radius: 50%;
-    border: 2px solid var(--accent); opacity: 0; animation: ring 2s ease-out infinite;
-  }
-  @keyframes ring { 0% { transform: scale(.85); opacity: .6; } 100% { transform: scale(1.25); opacity: 0; } }
-  .masthead { padding-right: 52px; }
-
-  #confetti { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 100; }
-
-  @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after { animation: none !important; transition: none !important; }
-  }
-</style>
-
+<!-- Body: background layers, music button and the step cards. -->
 <canvas id="confetti" aria-hidden="true"></canvas>
+<div class="flash" id="flash" aria-hidden="true"></div>
 
 <audio id="bgm" src="BMusic/Justin%20Vasquez%20-%20Yours%20(Official%20Lyric%20Video).mp3" loop preload="auto"></audio>
 <button class="music-btn" id="musicBtn" type="button" aria-label="Mute music" aria-pressed="false">
@@ -354,44 +38,62 @@
 
   <div class="progress" aria-live="polite">
     <div class="bar"><div class="fill" id="fill"></div></div>
-    <div class="meta"><span id="stepLabel">Step 1 of 6 · Welcome</span><span id="stepStatus">Processing your reservation…</span></div>
+    <div class="meta"><span id="stepLabel">Step 1 of 10 · Security check</span><span id="stepStatus">Processing your reservation…</span></div>
   </div>
 
-  <!-- 1. Welcome -->
-  <section class="card enter" data-step="1" data-name="Welcome">
-    <span class="eyebrow">Official notice</span>
-    <h1 tabindex="-1">Congratulations, <span class="hl">lucky applicant</span>!</h1>
-    <p class="lead">You have been selected for one <strong>Temporary Date™</strong>.</p>
-    <p class="small">This is a trial version. There's no commitment, and it's 100% refundable in smiles. Please complete the short reservation process so we can confirm your slot.</p>
-    <p class="fine">Applicants selected this year: 1 · Selection criteria: classified · Estimated time: under 2 minutes</p>
-    <div class="actions">
+  <!-- 1. Security checkpoint, then the welcome notice -->
+  <section class="card" data-step="1" data-key="gate" data-name="Security check">
+    <span class="eyebrow" id="gateEyebrow">Security checkpoint · Gate 1</span>
+    <div class="restricted gate-part" role="note">
+      <span class="r-title"><span class="siren" aria-hidden="true">🚨</span> Restricted area <span class="siren" aria-hidden="true">🚨</span></span>
+      <p>This page is for <strong>ONE lucky girl only</strong>: the one <strong class="js-me"></strong> loves.</p>
+      <p class="small">Unauthorized girls will be politely escorted out by the bear. 🐻</p>
+    </div>
+    <div class="bouncer">
+      <div class="bear-wrap" id="bearGate" aria-hidden="true"></div>
+      <p class="bubble" id="gateBubble" aria-live="polite">Halt! ✋ Who goes there?</p>
+    </div>
+    <h1 class="gate-part" tabindex="-1">Identify yourself 🕶️</h1>
+    <p class="lead gate-part">To enter, please type your <strong>second name</strong>.</p>
+    <div class="field gate-part">
+      <label class="label" for="secondName">Second name</label>
+      <div class="scan-wrap" id="scanWrap">
+        <input type="text" id="secondName" maxlength="40" autocomplete="off" autocapitalize="words" spellcheck="false" placeholder="Type it here">
+        <span class="gate-stamp" id="gateStamp" hidden></span>
+      </div>
+    </div>
+    <div class="processing gate-part" id="gateLog" aria-live="polite" hidden></div>
+    <p class="note gate-part" id="gateNote" aria-live="polite"></p>
+    <div class="actions gate-part">
+      <span class="fine">Officer Bear · on duty</span>
+      <button class="btn" id="verifyBtn" type="button">Verify me</button>
+      <div class="confirm-row" id="confirmRow" hidden></div>
+    </div>
+
+    <h1 class="welcome-part" tabindex="-1" hidden>Congratulations, <span class="hl">lucky applicant</span>!</h1>
+    <p class="lead welcome-part" hidden>You have been selected for one <strong>Temporary Date™</strong>.</p>
+    <p class="small welcome-part" hidden>This is a trial version. There's no commitment, and it's 100% refundable in smiles. Please complete the short reservation process so we can confirm your slot.</p>
+    <p class="fine welcome-part" hidden>Applicants selected this year: 1 · Selection criteria: classified · Bear approval: granted</p>
+    <div class="actions welcome-part" hidden>
       <span></span>
-      <button class="btn" data-next>Start booking</button>
+      <button class="btn" data-next data-saving="Opening your file">Start booking</button>
     </div>
   </section>
 
-  <!-- 2. Verify -->
-  <section class="card" data-step="2" data-name="Verification" hidden>
+  <!-- 2. Applicant details -->
+  <section class="card" data-step="2" data-key="applicant" data-name="Verification" hidden>
     <span class="eyebrow">Section A · Applicant verification</span>
-    <h2 tabindex="-1">Let's make sure we have the right person</h2>
+    <h2 tabindex="-1">Now, the rest of your details</h2>
     <div class="field">
-      <label class="label" for="herName">Applicant name</label>
-      <div class="name-row">
-        <input type="text" id="herName" maxlength="30" autocomplete="given-name" placeholder="Type your name here">
-        <span class="verified" id="herVerified" hidden>✔ VERIFIED</span>
-      </div>
+      <span class="label">Second name</span>
+      <div class="value-row"><strong class="js-second"></strong><span class="verified">✔ VERIFIED BY BEAR</span></div>
     </div>
     <div class="field">
-      <span class="label">Applicant photo · selfie please 🤳</span>
-      <label class="photo-drop" for="selfie">
-        <span class="photo-thumb"><img id="selfiePreview" alt="Your selfie" hidden><span id="selfieIcon" aria-hidden="true">📷</span></span>
-        <span class="photo-text">
-          <strong id="selfieTitle">Tap to add a selfie</strong>
-          <span class="small" id="selfieHint">A clear photo of your face works best.</span>
-        </span>
-      </label>
-      <input type="file" id="selfie" accept="image/*" class="sr-only">
-      <p class="fine">Remember this photo: at the end you'll be able to download a little surprise made from it. Your photo stays on your phone and is never uploaded anywhere.</p>
+      <label class="label" for="herName">First name</label>
+      <div class="name-row">
+        <input type="text" id="herName" maxlength="30" autocomplete="given-name" placeholder="Type your first name here">
+        <span class="verified" id="herVerified" hidden>✔ VERIFIED</span>
+      </div>
     </div>
     <div class="field">
       <span class="label">Requested by</span>
@@ -409,9 +111,66 @@
     <p class="note no-back-note" id="noBackNote" aria-live="polite"></p>
   </section>
 
-  <!-- 3. Activity -->
-  <section class="card" data-step="3" data-name="Activity" hidden>
-    <span class="eyebrow">Section B · Choose your package</span>
+  <!-- 3. Photo booth -->
+  <section class="card" data-step="3" data-key="photo" data-name="Photo booth" hidden>
+    <span class="eyebrow">Section B · Photo booth</span>
+    <h2 tabindex="-1">Say cheese! 🧀</h2>
+    <div class="booth">
+      <div class="bear-wrap" id="bearBooth" aria-hidden="true"></div>
+      <figure class="polaroid empty" id="polaroid">
+        <div class="polaroid-photo"><img id="selfiePreview" alt="Your selfie" hidden><span id="selfieIcon" aria-hidden="true">📷</span></div>
+        <figcaption class="polaroid-caption" id="polaroidCaption">Your photo goes here</figcaption>
+      </figure>
+    </div>
+    <label class="photo-drop" for="selfie">
+      <span class="photo-thumb" aria-hidden="true">🤳</span>
+      <span class="photo-text">
+        <strong id="selfieTitle">Tap to take or choose a selfie</strong>
+        <span class="small" id="selfieHint">A clear photo of your face works best.</span>
+      </span>
+    </label>
+    <input type="file" id="selfie" accept="image/*" class="sr-only">
+    <p class="fine">Remember this photo: at the end you'll get a little surprise made from it. Your photo stays on your phone and is never uploaded anywhere.</p>
+    <p class="note" id="boothNote" aria-live="polite"></p>
+    <div class="actions">
+      <button class="btn ghost" id="shyBtn" type="button">I'm shy 🙈</button>
+      <button class="btn" data-next id="boothNext" disabled>Looks great</button>
+    </div>
+  </section>
+
+  <!-- 4. Compatibility quiz -->
+  <section class="card" data-step="4" data-key="quiz" data-name="Compatibility quiz" hidden>
+    <span class="eyebrow">Section C · Compatibility test</span>
+    <h2 tabindex="-1">How well do you know <span class="js-me"></span>?</h2>
+    <p class="small">5 quick questions. No pressure. (A little pressure.)</p>
+    <div class="quiz" id="quizCard">
+      <div class="quiz-head">
+        <div class="bear-wrap small-bear" id="bearQuiz" aria-hidden="true"></div>
+        <div class="quiz-ask">
+          <span class="label" id="quizCount"></span>
+          <p class="quiz-q" id="quizQ" aria-live="polite"></p>
+        </div>
+      </div>
+      <div class="grid one quiz-opts" id="quizOptions" role="group" aria-label="Answers"></div>
+      <p class="note" id="quizNote" aria-live="polite"></p>
+      <div class="quiz-next"><button class="btn" id="quizNextQ" type="button" hidden>Next question →</button></div>
+    </div>
+    <div class="quiz-result" id="quizResult" hidden>
+      <div class="bear-wrap" id="bearQuizResult" aria-hidden="true"></div>
+      <span class="label">Compatibility</span>
+      <p class="quiz-percent"><span id="quizPercent">0</span>%</p>
+      <p class="lead" id="quizResultText"></p>
+      <p class="small" id="quizScore"></p>
+    </div>
+    <div class="actions">
+      <button class="btn ghost" data-back>Back</button>
+      <button class="btn" data-next id="quizNext" disabled hidden>Continue</button>
+    </div>
+  </section>
+
+  <!-- 5. Activity -->
+  <section class="card" data-step="5" data-key="activity" data-name="Activity" hidden>
+    <span class="eyebrow">Section D · Choose your package</span>
     <h2 tabindex="-1">What should the Temporary Date™ include?</h2>
     <div class="grid" id="activities" role="group" aria-label="Activities"></div>
     <p class="note" id="activityNote" aria-live="polite"></p>
@@ -421,9 +180,22 @@
     </div>
   </section>
 
-  <!-- 4. Schedule -->
-  <section class="card" data-step="4" data-name="Schedule" hidden>
-    <span class="eyebrow">Section C · Scheduling</span>
+  <!-- 6. Mood & snacks -->
+  <section class="card" data-step="6" data-key="mood" data-name="Mood &amp; snacks" hidden>
+    <span class="eyebrow">Section E · Date-day settings</span>
+    <h2 tabindex="-1">Set your date-day mood</h2>
+    <p class="small">Drag the sliders. <span class="js-me"></span> will prepare accordingly.</p>
+    <div class="sliders" id="sliders"></div>
+    <p class="note" id="moodNote" aria-live="polite"></p>
+    <div class="actions">
+      <button class="btn ghost" data-back>Back</button>
+      <button class="btn" data-next id="moodNext">Continue</button>
+    </div>
+  </section>
+
+  <!-- 7. Schedule -->
+  <section class="card" data-step="7" data-key="schedule" data-name="Schedule" hidden>
+    <span class="eyebrow">Section F · Scheduling</span>
     <h2 tabindex="-1">When are you available?</h2>
     <div class="field">
       <span class="label">Available dates (temporary hold)</span>
@@ -441,29 +213,68 @@
     </div>
   </section>
 
-  <!-- 5. Terms -->
-  <section class="card" data-step="5" data-name="Terms" hidden>
-    <span class="eyebrow">Section D · Terms &amp; conditions</span>
+  <!-- 8. Catch the hearts mini-game -->
+  <section class="card" data-step="8" data-key="game" data-name="Heart catcher" hidden>
+    <span class="eyebrow">Section G · Mini-game</span>
+    <h2 tabindex="-1">Catch the hearts! 💘</h2>
+    <p class="small">10 seconds. Tap as many falling hearts as you can.</p>
+    <div class="game">
+      <div class="game-hud" aria-live="off">
+        <span>💘 <b id="gameScore">0</b></span>
+        <span>⏱️ <b id="gameTime">10.0</b>s</span>
+      </div>
+      <div class="game-stage">
+        <canvas id="gameCanvas" aria-label="Falling hearts game"></canvas>
+        <div class="game-overlay" id="gameOverlay">
+          <div class="bear-wrap small-bear" id="bearGame" aria-hidden="true"></div>
+          <p class="game-title" id="gameTitle" aria-live="polite">Ready?</p>
+          <p class="small" id="gameSub"></p>
+          <button class="btn" id="gameStart" type="button">Start 💘</button>
+        </div>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn ghost" data-back>Back</button>
+      <button class="btn" data-next id="gameNext" disabled hidden>Continue</button>
+    </div>
+  </section>
+
+  <!-- 9. Terms & signature -->
+  <section class="card" data-step="9" data-key="terms" data-name="Terms" hidden>
+    <span class="eyebrow">Section H · Terms &amp; conditions</span>
     <h2 tabindex="-1">The fine print (please read, it's cute)</h2>
     <ol class="terms" id="terms"></ol>
     <label class="check" for="agree">
       <input type="checkbox" id="agree">
       <span>I have read and agree to the Temporary Date™ Agreement.</span>
     </label>
+    <div class="field">
+      <span class="label">Signature · sign with your finger ✍️</span>
+      <div class="sign-pad">
+        <canvas id="signPad" aria-label="Signature pad"></canvas>
+        <span class="sign-hint" id="signHint" aria-hidden="true">Sign here</span>
+      </div>
+      <div class="sign-row"><button class="btn ghost" id="signClear" type="button">Oops, let me sign prettier</button></div>
+    </div>
     <div class="actions">
       <button class="btn ghost" data-back>Back</button>
-      <button class="btn" data-next id="termsNext" disabled>Submit application</button>
+      <button class="btn" data-next id="termsNext" data-saving="Submitting" disabled>Submit application</button>
     </div>
   </section>
 
-  <!-- 6. Final question -->
-  <section class="card" data-step="6" data-name="Confirmation" hidden>
-    <span class="eyebrow">Section E · Final confirmation</span>
+  <!-- 10. Final question -->
+  <section class="card" data-step="10" data-key="final" data-name="Confirmation" hidden>
+    <span class="eyebrow">Section I · Final confirmation</span>
     <div class="processing" id="processing" aria-live="polite"></div>
+    <div class="brave" id="brave" hidden>
+      <div class="bear-wrap" id="bearBrave" aria-hidden="true"></div>
+      <p class="lead"><strong>Hold on…</strong> <span class="js-me"></span> needs a moment to be brave 😳</p>
+      <p class="breath" id="breath" aria-live="polite"></p>
+    </div>
     <div class="question" id="question" hidden>
       <p class="small">One last question before we finalize your reservation…</p>
       <div class="bear-wrap" id="bearQ" aria-hidden="true"></div>
-      <h2 tabindex="-1" id="bigQ">So, <span class="js-her"></span>… will you go on this date with me? 💌</h2>
+      <h2 tabindex="-1" id="bigQ"><span id="q1"></span> <span id="q2"></span></h2>
       <div class="answers">
         <button class="btn yes" id="yesBtn">Yes!</button>
         <button class="btn no" id="noBtn">No</button>
@@ -472,8 +283,8 @@
     </div>
   </section>
 
-  <!-- 7. Ticket -->
-  <section class="card ticket" data-step="7" data-name="Confirmed" hidden>
+  <!-- 11. Ticket (not counted in the progress bar) -->
+  <section class="card ticket" data-step="11" data-key="ticket" data-name="Confirmed" hidden>
     <div class="top">
       <span class="eyebrow">Booking confirmed</span>
       <h2 tabindex="-1">It's a date! 💖</h2>
@@ -483,11 +294,15 @@
     <div class="perf"></div>
     <div class="body">
       <dl>
-        <dt>Guest of honor</dt><dd class="js-her"></dd>
+        <dt>Guest of honor</dt><dd id="tHer"></dd>
         <dt>Escort</dt><dd class="js-me"></dd>
         <dt>Activity</dt><dd id="tActivity"></dd>
         <dt>Date</dt><dd id="tDate"></dd>
         <dt>Time</dt><dd id="tTime"></dd>
+        <dt>Heart catcher</dt><dd id="tHearts"></dd>
+        <!-- one row per mood slider is inserted here (App.fillMoodRows) -->
+        <dt hidden id="tMoods"></dt>
+        <dt>Compatibility</dt><dd id="tCompat"></dd>
         <dt>Refunds</dt><dd>No longer available 😌</dd>
       </dl>
       <div class="no-line"><span>Ticket <b id="tNo"></b></span><span>Admit: 2</span></div>
@@ -511,745 +326,26 @@
   </div>
 </main>
 
-<script>
-  // ===== Edit these before sharing =====
-  const CONFIG = {
-    // Her name is typed by her in Section A; this is only used if she leaves it blank somehow
-    HER_NAME: "Beautiful",
-    MY_NAME: "Gabriel",
-    activities: [
-      { id: "coffee",  emo: "☕", t: "Coffee",          s: "Cozy & classic",       note: "Excellent choice. I will pretend to know about coffee." },
-      { id: "icecream",emo: "🍦", t: "Ice cream",       s: "Two scoops included",
-        blocked: "Sorry, this item is not available for you because of your asthma. Gabriel's rules: your lungs come first 💗 Please choose another package." },
-      { id: "sunset",  emo: "🌅", t: "Sunset walk",     s: "Golden hour views",    note: "Romantic. Comfortable shoes recommended." },
-      { id: "food",    emo: "🌮", t: "Street food",     s: "Tasting tour",         note: "Great taste. Napkins are on me." },
-      { id: "movie",   emo: "🍿", t: "Movie",    s: "You pick the film",    note: "You pick the movie. I hold the popcorn. Deal." },
-      { id: "surprise",emo: "🎁", t: "Surprise me",     s: "Trust the process",    note: "Risky. I like it. Planning has already begun." }
-    ],
-    // Only these dates can be picked (YYYY-MM-DD)
-    dates: [
-      { id: "2026-12-24", emo: "🎄", s: "Christmas Eve" },
-      { id: "2026-12-25", emo: "🎁", s: "Christmas Day" },
-      { id: "2026-12-30", emo: "✨", s: "Almost New Year" }
-    ],
-    slots: [
-      { id: "morning",   emo: "☀️", t: "Morning",   s: "I'll bring the coffee" },
-      { id: "afternoon", emo: "🌤️", t: "Afternoon", s: "I'll bring the snacks" },
-      { id: "evening",   emo: "🌙", t: "Evening",   s: "I'll bring the bad jokes" }
-    ],
-    terms: [
-      "This Temporary Date™ is valid for one (1) outing and may be extended without prior notice.",
-      "The applicant agrees to be laughed *with*, never *at*.",
-      "Food can be shared, but dessert is 100% yours. No negotiations.",
-      "The requester promises to arrive on time and slightly overdressed.",
-      "Awkward silences will be filled with bad jokes. Complaints may be filed in the form of eye-rolls.",
-      "Photos are allowed. Unflattering photos must be deleted immediately upon request. Taking photos together is optional, unless the applicant happens to want one.",
-      "Holding hands is optional and subject to the applicant's approval at any time.",
-      "Phones are allowed, but friendly reminder: the person across the table is way more interesting than your feed. (Food pictures are exempt.)",
-      "The requester promises to make sure the applicant gets home safe and sound.",
-      "At the applicant's discretion, this Temporary Date™ may be upgraded to a permanent one.",
-      "The applicant reserves the right to smile, laugh, and enjoy the date without any expectations or obligations."
-    ]
-  };
-  // =====================================
-
-  const $ = (s, r = document) => r.querySelector(s);
-  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
-  const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const state = { activity: null, date: "", slot: null };
-  const TOTAL = 6;
-  let current = 1;
-
-  // Her name comes from what she types in Section A
-  const herName = () => ($("#herName").value.trim().replace(/\s+/g, " ") || CONFIG.HER_NAME);
-  const syncHer = () => {
-    const typed = $("#herName").value.trim().length > 0;
-    $$(".js-her").forEach(el => el.textContent = herName());
-    $("#herVerified").hidden = !typed;
-    $("#verifyNext").disabled = !typed;
-  };
-  $("#herName").addEventListener("input", syncHer);
-  $("#herName").addEventListener("keydown", e => {
-    if (e.key === "Enter" && !$("#verifyNext").disabled) { e.preventDefault(); go(current + 1); }
-  });
-  syncHer();
-  $$(".js-me").forEach(el => el.textContent = CONFIG.MY_NAME);
-
-  // ---- background music: on by default, mute button top-right.
-  // Browsers block sound until the visitor taps something, so if autoplay is blocked
-  // the music starts on her first tap or key press anywhere on the page.
-  const bgm = $("#bgm"), musicBtn = $("#musicBtn");
-  bgm.volume = 0.5;
-  let musicMuted = false;
-  const startEvents = ["pointerdown", "keydown", "touchstart"];
-  const updateMusicBtn = () => {
-    musicBtn.classList.toggle("muted", musicMuted);
-    musicBtn.classList.toggle("playing", !musicMuted && !bgm.paused);
-    musicBtn.setAttribute("aria-pressed", String(musicMuted));
-    musicBtn.setAttribute("aria-label", musicMuted ? "Play music" : "Mute music");
-  };
-  const removeStarters = () => startEvents.forEach(ev => document.removeEventListener(ev, tryPlay, true));
-  function tryPlay() {
-    if (musicMuted) return;
-    bgm.play().then(() => { removeStarters(); updateMusicBtn(); }).catch(() => {});
-  }
-  startEvents.forEach(ev => document.addEventListener(ev, tryPlay, true));
-  musicBtn.addEventListener("click", () => {
-    musicMuted = !musicMuted;
-    if (musicMuted) bgm.pause(); else tryPlay();
-    updateMusicBtn();
-  });
-  bgm.addEventListener("play", updateMusicBtn);
-  bgm.addEventListener("pause", updateMusicBtn);
-  bgm.addEventListener("error", () => { musicBtn.hidden = true; });
-  // Pause while the tab is in the background, resume when she comes back
-  document.addEventListener("visibilitychange", () => {
-    if (document.hidden) bgm.pause(); else if (!musicMuted) tryPlay();
-  });
-  updateMusicBtn();
-  tryPlay();
-
-  // ---- step navigation
-  function go(n) {
-    $$("section[data-step]").forEach(s => { s.hidden = Number(s.dataset.step) !== n; s.classList.remove("enter"); });
-    const sec = $(`section[data-step="${n}"]`);
-    void sec.offsetWidth; sec.classList.add("enter");
-    current = n;
-    const shown = Math.min(n, TOTAL);
-    $("#fill").style.width = (n > TOTAL ? 100 : ((shown - 1) / TOTAL) * 100 + 100 / TOTAL / 2) + "%";
-    $("#stepLabel").textContent = n > TOTAL ? "Complete" : `Step ${shown} of ${TOTAL} · ${sec.dataset.name}`;
-    $("#stepStatus").textContent = n > TOTAL ? "Reservation confirmed ✔" : "Processing your reservation…";
-    window.scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" });
-    const h = $("h1, h2", sec); if (h && n !== 6) h.focus({ preventScroll: true });
-    if (n === 6) runProcessing();
-  }
-  $$("[data-next]").forEach(b => b.addEventListener("click", () => go(current + 1)));
-  $$("[data-back]").forEach(b => b.addEventListener("click", () => go(current - 1)));
-
-  // ---- step 2: there's no going back once the booking has started
-  const noBackLines = [
-    "Sorry, your booking is already in progress. There's no going back now 😌",
-    "The Back button is currently on vacation 🏖️",
-    "Nice try. You're already in.",
-    "Error 404: Way back not found.",
-    "Gabriel has locked this door. Forward is the only way 💘"
-  ];
-  let noBackTries = 0;
-  $("#noBackBtn").addEventListener("click", () => {
-    const b = $("#noBackBtn");
-    $("#noBackNote").textContent = noBackLines[Math.min(noBackTries, noBackLines.length - 1)].replace("Gabriel", CONFIG.MY_NAME);
-    noBackTries++;
-    b.classList.remove("shake"); void b.offsetWidth; b.classList.add("shake");
-    if (noBackTries >= noBackLines.length) { b.classList.add("locked"); b.textContent = "Back 🔒"; }
-  });
-
-  // ---- step 2: the un-uncheckable checkbox
-  const cutestLines = [
-    "This field cannot be changed. It's a fact.",
-    "Nice try. Still the cutest.",
-    "The system has re-checked this box for you.",
-    "Error 143: modesty not accepted."
-  ];
-  let cutestTries = 0;
-  $("#cutest").addEventListener("click", e => {
-    e.preventDefault();
-    $("#cutestNote").textContent = cutestLines[cutestTries++ % cutestLines.length];
-  });
-
-  // ---- tile builder
-  function tiles(container, items, rowStyle, onPick, onBlocked) {
-    items.forEach(it => {
-      const b = document.createElement("button");
-      b.type = "button";
-      b.className = "tile" + (rowStyle ? " row" : "");
-      b.setAttribute("aria-pressed", "false");
-      b.innerHTML = `<span class="emo" aria-hidden="true">${it.emo}</span><span class="t">${it.t}</span><span class="s">${it.s}</span>`;
-      b.addEventListener("click", () => {
-        if (it.blocked) {
-          if (!b.querySelector(".deny")) {
-            const d = document.createElement("span");
-            d.className = "deny";
-            d.innerHTML = "<b>Not available<br>for you 💗</b>";
-            b.appendChild(d);
-          }
-          b.classList.add("denied");
-          b.classList.remove("shake"); void b.offsetWidth; b.classList.add("shake");
-          onBlocked && onBlocked(it);
-          return;
-        }
-        $$(".tile", container).forEach(x => x.setAttribute("aria-pressed", "false"));
-        b.setAttribute("aria-pressed", "true");
-        onPick(it);
-      });
-      container.appendChild(b);
-    });
-  }
-
-  // ---- step 3: activity
-  tiles($("#activities"), CONFIG.activities, false, it => {
-    state.activity = it;
-    $("#activityNote").classList.remove("warn");
-    $("#activityNote").textContent = it.note;
-    $("#activityNext").disabled = false;
-  }, it => {
-    $("#activityNote").classList.add("warn");
-    $("#activityNote").textContent = it.blocked;
-  });
-
-  // ---- step 4: schedule
-  const fmtDate = (iso, opts) => new Date(iso + "T12:00:00").toLocaleDateString("en-US", opts);
-  const checkSchedule = () => { $("#scheduleNext").disabled = !(state.date && state.slot); };
-  const dateItems = CONFIG.dates.map(d => ({ ...d, t: fmtDate(d.id, { weekday: "short", month: "short", day: "numeric" }) }));
-  tiles($("#dates"), dateItems, true, it => { state.date = it.id; checkSchedule(); });
-  tiles($("#slots"), CONFIG.slots, true, it => { state.slot = it; checkSchedule(); });
-
-  // ---- step 5: terms
-  // *word* in a term is shown in italics
-  CONFIG.terms.forEach(t => {
-    const li = document.createElement("li");
-    t.split(/(\*[^*]+\*)/).forEach(part => {
-      if (/^\*[^*]+\*$/.test(part)) { const em = document.createElement("em"); em.textContent = part.slice(1, -1); li.appendChild(em); }
-      else if (part) li.appendChild(document.createTextNode(part));
-    });
-    $("#terms").appendChild(li);
-  });
-  $("#agree").addEventListener("change", e => { $("#termsNext").disabled = !e.target.checked; });
-
-  // ---- step 6: fake processing, then the question
-  let processed = false;
-  function runProcessing() {
-    const box = $("#processing"), q = $("#question");
-    if (processed) { box.hidden = true; q.hidden = false; return; }
-    const lines = [
-      ["Checking availability…", "available"],
-      ["Verifying applicant cuteness…", "off the charts"],
-      ["Calculating chemistry…", "98.7%"],
-      ["Consulting the stars…", "they said yes"]
-    ];
-    box.innerHTML = "";
-    let i = 0;
-    const step = () => {
-      if (i < lines.length) {
-        const row = document.createElement("div");
-        row.innerHTML = `${lines[i][0]} <span class="ok">✔ ${lines[i][1]}</span>`;
-        box.appendChild(row); i++;
-        setTimeout(step, reduceMotion ? 50 : 650);
-      } else {
-        setTimeout(() => {
-          processed = true;
-          box.hidden = true; q.hidden = false;
-          $("#bigQ").focus({ preventScroll: true });
-          // Short pause so a leftover tap can't hit Yes before she reads the question
-          const answers = $(".answers"); answers.classList.add("arming");
-          $$(".answers .btn").forEach(b => b.disabled = true);
-          setTimeout(() => {
-            answers.classList.remove("arming");
-            $$(".answers .btn").forEach(b => b.disabled = false);
-          }, 1500);
-        }, reduceMotion ? 50 : 500);
-      }
-    };
-    step();
-  }
-
-  // ---- the runaway "No"
-  const yesBtn = $("#yesBtn"), noBtn = $("#noBtn"), plead = $("#plead");
-  const pleas = [
-    "Are you sure? 🥺",
-    "Hmm, that button seems broken.",
-    "System error: 'No' not found.",
-    "Please reconsider. I already told my mom.",
-    "The Yes button is getting lonely…",
-    "You're breaking the system's heart 💔",
-    "Okay, the No button gave up."
-  ];
-  let dodges = 0;
-  function dodge(e) {
-    if (noBtn.dataset.converted) return;
-    if (e) e.preventDefault();
-    dodges++;
-    setMood("sad");
-    clearTimeout(bearTimer);
-    bearTimer = setTimeout(() => { if (!answered) setMood("nervous"); }, 1400);
-    plead.textContent = pleas[Math.min(dodges - 1, pleas.length - 1)];
-    const maxScale = window.innerWidth < 420 ? 1.3 : 1.6;
-    yesBtn.style.transform = `scale(${Math.min(1 + dodges * 0.06, maxScale)})`;
-    if (dodges >= pleas.length) {
-      noBtn.classList.remove("loose");
-      noBtn.style.left = noBtn.style.top = noBtn.style.transform = "";
-      noBtn.textContent = "Yes 💖";
-      noBtn.dataset.converted = "1";
-      return;
-    }
-    const r = noBtn.getBoundingClientRect();
-    const pad = 16, vw = window.innerWidth, vh = window.innerHeight;
-    let x, y, tries = 0;
-    do {
-      x = pad + Math.random() * Math.max(0, vw - r.width - pad * 2);
-      y = pad + 60 + Math.random() * Math.max(0, vh - r.height - pad * 2 - 60);
-      tries++;
-    } while (tries < 20 && Math.hypot(x - r.left, y - r.top) < 120);
-    noBtn.classList.add("loose");
-    noBtn.style.left = x + "px";
-    noBtn.style.top = y + "px";
-    noBtn.style.transform = `scale(${Math.max(1 - dodges * 0.08, 0.55)})`;
-  }
-  noBtn.addEventListener("pointerenter", e => { if (e.pointerType === "mouse") dodge(); });
-  noBtn.addEventListener("pointerdown", dodge);
-  noBtn.addEventListener("click", e => { if (noBtn.dataset.converted) sayYes(); else dodge(e); });
-  yesBtn.addEventListener("click", sayYes);
-
-  // ---- the silly bear
-  const INK = "#3f1229", FUR = "#c9895f", FUR2 = "#a86b45", TEAR = "#8fd0f5";
-  const bearSVG = mood => `
-    <svg class="bear ${mood}" viewBox="0 0 200 200" role="img">
-      <g class="m-happy">
-        <text class="floaty" x="18" y="70" font-size="22">💖</text>
-        <text class="floaty" x="160" y="58" font-size="18">💕</text>
-        <text class="floaty" x="28" y="140" font-size="16">✨</text>
-        <text class="floaty" x="166" y="130" font-size="22">💗</text>
-      </g>
-      <g class="b-body">
-        <circle cx="58" cy="52" r="22" fill="${FUR2}"/><circle cx="142" cy="52" r="22" fill="${FUR2}"/>
-        <circle cx="58" cy="52" r="11" fill="#f3b7c4"/><circle cx="142" cy="52" r="11" fill="#f3b7c4"/>
-        <ellipse cx="100" cy="100" rx="66" ry="60" fill="${FUR}"/>
-        <ellipse cx="100" cy="124" rx="30" ry="22" fill="#f3d7c2"/>
-        <ellipse cx="62" cy="120" rx="11" ry="6" fill="#ff8fab" opacity=".75"/>
-        <ellipse cx="138" cy="120" rx="11" ry="6" fill="#ff8fab" opacity=".75"/>
-        <g class="eyes-open">
-          <circle cx="76" cy="92" r="7.5" fill="${INK}"/><circle cx="124" cy="92" r="7.5" fill="${INK}"/>
-          <circle cx="78.5" cy="89.5" r="2.4" fill="#fff"/><circle cx="126.5" cy="89.5" r="2.4" fill="#fff"/>
-        </g>
-        <path class="m-happy" d="M66 95 Q76 80 86 95 M114 95 Q124 80 134 95" stroke="${INK}" stroke-width="5" fill="none" stroke-linecap="round"/>
-        <path class="m-sad" d="M64 84 L84 77 M136 84 L116 77" stroke="${INK}" stroke-width="4" fill="none" stroke-linecap="round"/>
-        <ellipse cx="100" cy="112" rx="9" ry="6.5" fill="${INK}"/>
-        <path class="m-nervous" d="M86 134 q3.5 -4 7 0 t7 0 t7 0 t7 0" stroke="${INK}" stroke-width="3.5" fill="none" stroke-linecap="round"/>
-        <path class="m-sad" d="M88 140 Q100 129 112 140" stroke="${INK}" stroke-width="4" fill="none" stroke-linecap="round"/>
-        <path class="m-happy" d="M84 128 Q100 154 116 128 Z" fill="#7a1f3d"/>
-        <path class="m-nervous sweat" d="M152 60 q7 11 0 15 q-7 -4 0 -15z" fill="${TEAR}"/>
-        <g class="m-sad">
-          <ellipse class="tear" cx="74" cy="106" rx="4" ry="6" fill="${TEAR}"/>
-          <ellipse class="tear" cx="126" cy="106" rx="4" ry="6" fill="${TEAR}"/>
-        </g>
-      </g>
-      <path class="b-heart" d="M100 194 C68 172 72 148 89 150 C96 151 100 157 100 161 C100 157 104 151 111 150 C128 148 132 172 100 194Z" fill="#df3567"/>
-      <circle cx="80" cy="168" r="11" fill="${FUR2}"/><circle cx="120" cy="168" r="11" fill="${FUR2}"/>
-    </svg>`;
-  $("#bearQ").innerHTML = bearSVG("nervous");
-  $("#bearT").innerHTML = bearSVG("happy");
-  let bearTimer;
-  function setMood(m) { $("#bearQ .bear").setAttribute("class", "bear " + m); }
-
-  // ---- yes → happy bear → ticket
-  let answered = false;
-  function sayYes() {
-    if (answered) return;
-    answered = true;
-    clearTimeout(bearTimer);
-    setMood("happy");
-    noBtn.classList.remove("loose");
-    noBtn.hidden = true;
-    yesBtn.disabled = true;
-    yesBtn.style.transform = "";
-    yesBtn.textContent = "Yay!!! 💖";
-    plead.textContent = "The bear is very, very happy.";
-    setTimeout(finishYes, reduceMotion ? 600 : 2200);
-  }
-  function finishYes() {
-    $("#tActivity").textContent = `${state.activity.emo} ${state.activity.t}`;
-    $("#tDate").textContent = fmtDate(state.date, { weekday: "long", month: "long", day: "numeric", year: "numeric" }) + " (temporary, can be rescheduled)";
-    $("#tTime").textContent = `${state.slot.emo} ${state.slot.t}`;
-    state.ticketNo = "#LOVE-" + String(Math.floor(1000 + Math.random() * 9000));
-    $("#tNo").textContent = state.ticketNo;
-    go(7);
-    $("#saveRow").hidden = false;
-    drawPortrait();
-    confetti();
-    ticketBlob = renderTicket();
-  }
-
-  // ---- text portrait: the photo shows through the lyrics
-  // The portrait is made from the selfie she adds in Section A (kept only in her browser).
-  let selfieURL = null;
-  $("#selfie").addEventListener("change", e => {
-    const f = e.target.files && e.target.files[0];
-    if (!f || !f.type.startsWith("image/")) return;
-    if (selfieURL) URL.revokeObjectURL(selfieURL);
-    selfieURL = URL.createObjectURL(f);
-    const prev = $("#selfiePreview");
-    prev.src = selfieURL; prev.hidden = false;
-    $("#selfieIcon").hidden = true;
-    $("#selfieTitle").textContent = "Looking good! ✔";
-    $("#selfieHint").textContent = "Tap to change photo.";
-  });
-  // TESTING ONLY: true = show the portrait right under the welcome card so it's easy to check.
-  // Set back to false before sending the link to her.
-  const PREVIEW_PORTRAIT = false;
-  const LYRICS = `If you got something to say, baby say it now
-There's no need to hide a thing girl, just let it out
-I've been looking at your eyes and I know something's up
-Just tell me what you want to say, baby open up
-You know that I have liked you for a while
-You know that I can't go a day without your smile
-You know that you are all I want
-It's always been you, so
-Baby, we can try something out
-Baby girl, just give me your hand
-Baby, we could try working out
-You can be my girl, I'm your man
-I really love to trust somebody who can trust me
-I really love to love a lover who can love me
-Can you just be my girl? I'll make you understand
-Can you just be my world? I'd love to be your man
-Girl, if it's cool with you, I will not waste your time
-Tell me what you want me to do, 'cause I wanna make you mine
-I see the way that you smile when you look at me
-The way you laugh, the way you blush when you're close to me
-I start to stutter and I'm tryin' to spit the words out
-But I'm always lost in your eyes, the words won't come out
-You know that I have liked you for a while
-You know that I can't go a day without your smile
-You know that you are all I want
-It's always been you, so
-Baby, we can try something out
-Baby girl, just give me your hand
-Baby, we could try working out
-You can be my girl, I'm your man
-I really love to trust somebody who can trust me
-I really love to love a lover who can love me
-Can you just be my girl? I'll make you understand
-Can you just be my world? I'd love to be your man
-Girl, if it's cool with you, I will not waste your time
-Tell me what you want me to do, 'cause I wanna make you mine
-Tell me what it is you want
-Tell me what it is I've gotta do to prove
-All the feelings that I'm feeling, boo
-You and I both know that the feelings that I'm feeling for you
-Was the way that you're feeling too
-Not crazy, but baby, you make me smile so much
-Not crazy, but baby, I'm gone from single touch from you
-All them girls in the world, but I only want one
-You're the one that I want here with me
-I'm a different man, now better than before
-You're the girl that I wanna be kissing
-And holdin' and lovin' every single day
-I like you, you like me, so I'm just wonderin'
-Baby, we can try something out
-Baby girl, just give me your hand
-Baby, we could try working out
-You can be my girl, I'm your man
-I really love to trust somebody who can trust me
-I really love to love a lover who can love me
-Can you just be my girl? I'll make you understand
-Can you just be my world? I'd love to be your man
-Girl, if it's cool with you, I will not waste your time
-Tell me what you want me to do, 'cause I wanna make you mine`;
-
-  let portraitDone = false, portraitImg = null, portraitW = 0, portraitDpr = 1;
-  const PORTRAIT_TEXT_ON_PAGE = "#000000";   // lyric color shown on the page
-
-  async function drawPortrait() {
-    if (portraitDone) return;
-    const cv = $("#portraitCanvas");
-    const img = new Image();
-    if (!selfieURL) { cv.closest(".portrait").hidden = true; return; }   // no selfie → no portrait
-    img.src = selfieURL;
-    try { await img.decode(); } catch { cv.closest(".portrait").hidden = true; return; }
-    try { await document.fonts.load(`400 10px Poppins`); } catch {}
-    portraitImg = img;
-    portraitDpr = Math.min(window.devicePixelRatio || 1, 3);
-    portraitW = Math.round(Math.min(cv.clientWidth || 360, 440) * portraitDpr);
-    paintPortrait(cv, PORTRAIT_TEXT_ON_PAGE);
-    portraitDone = true;
-  }
-
-  // Draws the portrait onto any canvas with the given lyric color (same size/look as on the page)
-  function paintPortrait(cv, textColor) {
-    const img = portraitImg, dpr = portraitDpr;
-    const W = portraitW, H = Math.round(W * img.naturalHeight / img.naturalWidth);
-    cv.width = W; cv.height = H;
-    const ctx = cv.getContext("2d");
-
-    // 1) Lay out the lyrics as one continuous stream of small text, line after line
-    const fs = 5 * dpr, lh = fs * 0.85;   // lyrics font size, line spacing (lower = tighter)
-    const font = `400 ${fs}px Poppins, "Segoe UI", Arial, sans-serif`;
-    ctx.font = font;
-    const stream = LYRICS.replace(/\s*\n\s*/g, " · ") + " · ";
-    const lines = [];
-    let pos = 0;
-    for (let y = fs; y < H + lh; y += lh) {
-      let line = "";
-      while (ctx.measureText(line).width < W + fs * 4) {
-        line += stream[pos % stream.length]; pos++;
-      }
-      lines.push([line, y]);
-    }
-    const drawText = () => lines.forEach(([t, y]) => ctx.fillText(t, -fs * 0.5, y));
-
-    // 2) Photo first, then white lyrics written on top of it.
-    // Gap color = how much of the photo shows (#ffffff = full photo, darker = dimmer).
-    ctx.fillStyle = "#d0d0d0"; ctx.fillRect(0, 0, W, H);
-    ctx.globalCompositeOperation = "multiply";
-    ctx.drawImage(img, 0, 0, W, H);
-    ctx.globalCompositeOperation = "source-over";
-    // Text color of the lyrics
-    ctx.font = font; ctx.fillStyle = textColor; drawText();
-  }
-
-  function portraitBlob(textColor) {
-    if (!portraitDone) return Promise.resolve(null);
-    const c = document.createElement("canvas");
-    paintPortrait(c, textColor);
-    return new Promise(res => c.toBlob(res, "image/png"));
-  }
-
-  if (PREVIEW_PORTRAIT) {
-    $('section[data-step="1"]').insertAdjacentElement("afterend", $(".portrait"));
-    drawPortrait();
-  }
-
-  // ---- downloadable ticket (PNG drawn on a canvas)
-  // On claude.ai the page uses the platform's download feature.
-  // Hosted anywhere else (Cloudflare etc.) it falls back to a normal browser download.
-  let ticketBlob = null, downloads = null;
-  const onClaude = !!(window.claude && window.claude.use);
-  (async () => {
-    if (onClaude) {
-      try { downloads = await window.claude.use("downloads"); } catch { downloads = null; }
-      if (downloads) $$(".dl-btn").forEach(b => b.hidden = false);
-    } else {
-      $$(".dl-btn").forEach(b => b.hidden = false);
-    }
-  })();
-  function plainDownload(blob, name) {
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url; a.download = name;
-    document.body.appendChild(a); a.click(); a.remove();
-    setTimeout(() => URL.revokeObjectURL(url), 4000);
-  }
-
-  function rr(ctx, x, y, w, h, r) {
-    ctx.beginPath();
-    ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r);
-    ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath();
-  }
-
-  async function renderTicket() {
-    const css = getComputedStyle(document.documentElement);
-    const v = n => css.getPropertyValue(n).trim();
-    const display = v("--display"), body = v("--body"), mono = v("--mono");
-    try {
-      await Promise.all([
-        document.fonts.load(`96px ${display}`), document.fonts.load(`800 42px ${body}`),
-        document.fonts.load(`400 42px ${body}`), document.fonts.load(`600 30px ${body}`), document.fonts.load(`26px ${mono}`)
-      ]);
-    } catch {}
-    const W = 1080;
-    const c = document.createElement("canvas"); c.width = W; c.height = 10;
-    let ctx = c.getContext("2d");
-    const C = { paper: v("--paper"), dot: v("--paper-dot"), card: v("--card"), ink: v("--ink"),
-                muted: v("--muted"), line: v("--line"), accent: v("--accent"), stamp: v("--stamp") };
-
-    // Measure the agreement first so the image is exactly as long as it needs to be
-    const TERM_FONT = `600 30px ${body}`, LH = 42, GAP = 22;
-    const wrap = (text, maxW) => {
-      const words = text.split(" "), lines = []; let line = "";
-      words.forEach(w => {
-        const test = line ? line + " " + w : w;
-        if (ctx.measureText(test).width > maxW && line) { lines.push(line); line = w; } else line = test;
-      });
-      if (line) lines.push(line);
-      return lines;
-    };
-    ctx.font = TERM_FONT;
-    const termLines = CONFIG.terms.map(t => wrap(t.replace(/\*/g, ""), 920 - 116 - 60));
-    const termsBodyH = termLines.reduce((s, l) => s + l.length * LH + GAP, 0);
-    const TY = 1580;                                   // top of the agreement card
-    const TH = 215 + termsBodyH + 190;                 // heading + terms + signature
-    const H = TY + TH + 110;
-    c.height = H;
-    ctx = c.getContext("2d");
-
-    // paper + dots
-    ctx.fillStyle = C.paper; ctx.fillRect(0, 0, W, H);
-    ctx.fillStyle = C.dot;
-    for (let y = 12; y < H; y += 34) for (let x = 12; x < W; x += 34) { ctx.beginPath(); ctx.arc(x, y, 2, 0, Math.PI * 2); ctx.fill(); }
-
-    ctx.textBaseline = "alphabetic";
-    ctx.fillStyle = C.muted; ctx.textAlign = "center";
-    ctx.font = `500 26px ${mono}`;
-    ctx.fillText("TEMPORARY DATE RESERVATION SYSTEM™ · FORM TD-14", W / 2, 95);
-
-    // card
-    const X = 80, Y = 140, CW = 920, CH = 1380, R = 40, band = 470;
-    ctx.save(); ctx.shadowColor = "rgba(63,18,41,.22)"; ctx.shadowBlur = 50; ctx.shadowOffsetY = 18;
-    rr(ctx, X, Y, CW, CH, R); ctx.fillStyle = C.card; ctx.fill(); ctx.restore();
-    ctx.save(); rr(ctx, X, Y, CW, CH, R); ctx.clip();
-    ctx.fillStyle = C.accent; ctx.fillRect(X, Y, CW, band);
-    ctx.restore();
-
-    ctx.textAlign = "left";
-    ctx.fillStyle = "#ffe1ea"; ctx.font = `500 28px ${mono}`;
-    ctx.fillText("BOOKING CONFIRMED", X + 60, Y + 95);
-    ctx.fillStyle = "#ffffff"; ctx.font = `96px ${display}`;
-    ctx.fillText("It's a date! 💖", X + 56, Y + 215);
-    ctx.font = `600 34px ${body}`;
-    ctx.fillText("Your Temporary Date™ has been approved.", X + 60, Y + 300);
-    ctx.fillText("Please arrive with your best smile.", X + 60, Y + 350);
-
-    // perforation
-    const py = Y + band;
-    ctx.strokeStyle = C.line; ctx.lineWidth = 4; ctx.setLineDash([16, 12]);
-    ctx.beginPath(); ctx.moveTo(X + 50, py); ctx.lineTo(X + CW - 50, py); ctx.stroke(); ctx.setLineDash([]);
-    ctx.fillStyle = C.paper;
-    [X, X + CW].forEach(cx => { ctx.beginPath(); ctx.arc(cx, py, 30, 0, Math.PI * 2); ctx.fill(); });
-
-    // details
-    const dateLong = fmtDate(state.date, { weekday: "long", month: "long", day: "numeric", year: "numeric" });
-    const rows = [
-      ["GUEST OF HONOR", herName()],
-      ["ESCORT", CONFIG.MY_NAME],
-      ["ACTIVITY", `${state.activity.emo} ${state.activity.t}`],
-      ["DATE", dateLong, "Temporary hold · can be rescheduled"],
-      ["TIME", `${state.slot.emo} ${state.slot.t}`],
-      ["REFUNDS", "No longer available 😌"]
-    ];
-    let y = py + 90;
-    rows.forEach(([label, value, sub]) => {
-      ctx.fillStyle = C.muted; ctx.font = `500 26px ${mono}`; ctx.fillText(label, X + 60, y);
-      ctx.fillStyle = C.ink; ctx.font = `800 44px ${body}`; ctx.fillText(value, X + 60, y + 54, CW - 120);
-      if (sub) { ctx.fillStyle = C.muted; ctx.font = `400 28px ${body}`; ctx.fillText(sub, X + 60, y + 96); y += 40; }
-      y += 118;
-    });
-
-    // ticket line
-    ctx.strokeStyle = C.line; ctx.lineWidth = 2;
-    ctx.beginPath(); ctx.moveTo(X + 60, Y + CH - 110); ctx.lineTo(X + CW - 60, Y + CH - 110); ctx.stroke();
-    ctx.fillStyle = C.muted; ctx.font = `500 30px ${mono}`;
-    ctx.fillText(`TICKET ${state.ticketNo}`, X + 60, Y + CH - 55);
-    ctx.textAlign = "right"; ctx.fillText("ADMIT: 2", X + CW - 60, Y + CH - 55);
-
-    // stamp
-    ctx.save();
-    ctx.translate(X + CW - 190, Y + CH - 330); ctx.rotate(-0.21);
-    ctx.globalAlpha = .85; ctx.strokeStyle = C.stamp; ctx.fillStyle = C.stamp; ctx.lineWidth = 6;
-    ctx.font = `56px ${display}`; ctx.textAlign = "center"; ctx.textBaseline = "middle";
-    const sw = ctx.measureText("APPROVED").width + 50;
-    rr(ctx, -sw / 2, -46, sw, 92, 18); ctx.stroke();
-    ctx.fillText("APPROVED", 0, 4);
-    ctx.restore();
-
-    // agreement card
-    ctx.save(); ctx.shadowColor = "rgba(63,18,41,.18)"; ctx.shadowBlur = 40; ctx.shadowOffsetY = 14;
-    rr(ctx, X, TY, CW, TH, R); ctx.fillStyle = C.card; ctx.fill(); ctx.restore();
-    ctx.textAlign = "left"; ctx.textBaseline = "alphabetic";
-    ctx.fillStyle = C.accent; ctx.font = `500 26px ${mono}`;
-    ctx.fillText("THE FINE PRINT", X + 60, TY + 80);
-    ctx.fillStyle = C.ink; ctx.font = `56px ${display}`;
-    ctx.fillText("Temporary Date™ Agreement", X + 58, TY + 150, CW - 120);
-    let ty = TY + 220;
-    termLines.forEach((lines, i) => {
-      ctx.fillStyle = C.accent; ctx.font = `500 28px ${mono}`;
-      ctx.fillText(String(i + 1).padStart(2, "0"), X + 60, ty);
-      ctx.fillStyle = C.ink; ctx.font = TERM_FONT;
-      lines.forEach((ln, k) => ctx.fillText(ln, X + 116, ty + k * LH));
-      ty += lines.length * LH + GAP;
-    });
-
-    // signature
-    ty += 10;
-    ctx.strokeStyle = C.line; ctx.lineWidth = 2;
-    ctx.beginPath(); ctx.moveTo(X + 60, ty); ctx.lineTo(X + CW - 60, ty); ctx.stroke();
-    ctx.fillStyle = C.muted; ctx.font = `500 24px ${mono}`;
-    ctx.fillText("AGREED & SIGNED BY", X + 60, ty + 55);
-    ctx.textAlign = "right";
-    ctx.fillText("DATE SIGNED", X + CW - 60, ty + 55);
-    ctx.fillStyle = C.ink; ctx.font = `800 38px ${body}`;
-    ctx.fillText(new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }), X + CW - 60, ty + 108);
-    ctx.textAlign = "left";
-    ctx.fillText(`${herName()} ✔`, X + 60, ty + 108, CW - 420);
-
-    // footer
-    ctx.textAlign = "center"; ctx.fillStyle = C.muted; ctx.font = `600 28px ${body}`;
-    ctx.fillText(`With love, ${CONFIG.MY_NAME} 💌`, W / 2, H - 45);
-
-    return new Promise(res => c.toBlob(res, "image/png"));
-  }
-
-  const fileSafe = s => s.replace(/[^\w]+/g, "-").replace(/^-|-$/g, "");
-
-  // Shared save logic for the ticket and the portrait
-  async function saveImage(getBlob, name, status, savedMsg) {
-    try {
-      const blob = await getBlob();
-      if (!blob) throw { code: "not_ready" };
-      if (downloads) await downloads.save({ filename: name, data: blob });
-      else if (!onClaude) plainDownload(blob, name);
-      else return;
-      status.textContent = savedMsg;
-    } catch (e) {
-      const code = e && e.code;
-      if (code === "declined") status.textContent = "Download cancelled. You can try again anytime.";
-      else if (code === "rate_limited") status.textContent = "One moment, then try again.";
-      else if (code === "host_unavailable") status.textContent = "This app can't save files. Open the link in a browser, or take a screenshot instead.";
-      else status.textContent = "Couldn't save it here. A screenshot works too 📸";
-    }
-  }
-
-  $("#dlBtn").addEventListener("click", () => saveImage(
-    () => (ticketBlob || (ticketBlob = renderTicket())),
-    `Temporary-Date-Ticket-${fileSafe(herName())}.png`,
-    $("#dlStatus"),
-    "Ticket saved! Now send it to " + CONFIG.MY_NAME + " 💖"
-  ));
-
-  $("#portraitBlackBtn").addEventListener("click", () => saveImage(
-    () => portraitBlob("#000000"),
-    `For-${fileSafe(herName())}-Every-Word-Black.png`,
-    $("#portraitStatus"),
-    "Portrait saved (black lyrics) 💌"
-  ));
-  $("#portraitWhiteBtn").addEventListener("click", () => saveImage(
-    () => portraitBlob("#ffffff"),
-    `For-${fileSafe(herName())}-Every-Word-White.png`,
-    $("#portraitStatus"),
-    "Portrait saved (white lyrics) 💌"
-  ));
-
-  // ---- confetti & hearts
-  function confetti() {
-    const c = $("#confetti"), ctx = c.getContext("2d");
-    const dpr = window.devicePixelRatio || 1;
-    c.width = innerWidth * dpr; c.height = innerHeight * dpr;
-    ctx.scale(dpr, dpr);
-    const colors = ["#df3567", "#ff8fab", "#ffc2d1", "#1f7a68", "#ffd166", "#ffffff"];
-    const count = reduceMotion ? 0 : 160;
-    const parts = Array.from({ length: count }, () => ({
-      x: innerWidth / 2 + (Math.random() - .5) * 80,
-      y: innerHeight * .35,
-      vx: (Math.random() - .5) * 14,
-      vy: -Math.random() * 14 - 4,
-      size: 6 + Math.random() * 10,
-      rot: Math.random() * Math.PI,
-      vr: (Math.random() - .5) * .3,
-      heart: Math.random() < .4,
-      color: colors[(Math.random() * colors.length) | 0]
-    }));
-    const start = performance.now();
-    (function frame(t) {
-      ctx.clearRect(0, 0, innerWidth, innerHeight);
-      parts.forEach(p => {
-        p.vy += .32; p.vx *= .99; p.x += p.vx; p.y += p.vy; p.rot += p.vr;
-        ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot); ctx.fillStyle = p.color;
-        if (p.heart) { ctx.font = `${p.size * 1.6}px sans-serif`; ctx.fillText("❤", -p.size / 2, p.size / 2); }
-        else ctx.fillRect(-p.size / 2, -p.size / 4, p.size, p.size / 2);
-        ctx.restore();
-      });
-      if (t - start < 4500) requestAnimationFrame(frame);
-      else ctx.clearRect(0, 0, innerWidth, innerHeight);
-    })(start);
-  }
-
-  go(1);
-</script>
+<!-- Scripts: plain (non-module) files so the page also opens straight from disk. Order matters. -->
+<script src="js/config.js"></script>
+<script src="js/lyrics.js"></script>
+<script src="js/core/helpers.js"></script>
+<script src="js/core/pacer.js"></script>
+<script src="js/core/mascot.js"></script>
+<script src="js/core/wizard.js"></script>
+<script src="js/core/music-player.js"></script>
+<script src="js/core/downloads.js"></script>
+<script src="js/core/confetti.js"></script>
+<script src="js/render/portrait-renderer.js"></script>
+<script src="js/render/ticket-renderer.js"></script>
+<script src="js/steps/name-gate.js"></script>
+<script src="js/steps/applicant-form.js"></script>
+<script src="js/steps/choice-tiles.js"></script>
+<script src="js/steps/photo-booth.js"></script>
+<script src="js/steps/quiz.js"></script>
+<script src="js/steps/mood-sliders.js"></script>
+<script src="js/steps/heart-game.js"></script>
+<script src="js/steps/signature-pad.js"></script>
+<script src="js/steps/final-question.js"></script>
+<script src="js/steps/runaway-button.js"></script>
+<script src="js/app.js"></script>

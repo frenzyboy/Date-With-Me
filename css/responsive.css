@@ -1,0 +1,26 @@
+/* =========================================================
+   14. Phones & reduced motion
+   ========================================================= */
+@media (max-width: 420px) {
+  .wrap { padding-block: 16px 32px; gap: 12px; }
+  .card { padding: 22px 16px; gap: 16px; border-radius: 16px; }
+  .tile { padding: 12px; }
+  .tile .emo { font-size: 1.4rem; }
+  .tile .s { font-size: .8rem; }
+  .actions .btn:not(.ghost) { flex: 1; }
+  .bouncer { gap: 10px; }
+  .bouncer .bear { width: 104px; height: 104px; }
+  .bubble { font-size: .95rem; padding: 10px 12px; }
+  .terms { max-height: 45vh; padding-left: 34px; font-size: .9rem; }
+  .ticket .top { padding: 20px 104px 18px 16px; }
+  .ticket .body { padding: 18px 16px 20px; }
+  .ticket .perf { margin: 0 14px; }
+  .ticket .perf::before { left: -27px; }
+  .ticket .perf::after { right: -27px; }
+  .ticket dl { grid-template-columns: 1fr; gap: 2px; }
+  .ticket dd { margin-bottom: 8px; }
+  .stamp { font-size: 1rem; right: 12px; top: 14px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}

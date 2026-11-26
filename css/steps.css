@@ -1,0 +1,247 @@
+/* =========================================================
+   7. Step 1: security checkpoint
+   ========================================================= */
+.restricted {
+  border: 2.5px dashed var(--danger); background: #fff0f2; border-radius: 14px;
+  padding: 14px 16px; display: grid; gap: 4px; text-align: center; transform: rotate(-1.2deg);
+}
+.restricted .r-title { font-family: var(--display); font-size: 1.35rem; color: var(--danger); text-transform: uppercase; letter-spacing: .03em; }
+.restricted .siren { display: inline-block; animation: siren 1s steps(1) infinite; }
+@keyframes siren { 50% { opacity: .25; } }
+.bouncer { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: 14px; }
+.bouncer .bear { width: 130px; height: 130px; }
+.bubble {
+  position: relative; background: #fff; border: 2px solid var(--ink); border-radius: 16px;
+  padding: 12px 14px; font-weight: 800; line-height: 1.35; box-shadow: 3px 3px 0 var(--ink);
+}
+.bubble::before {
+  content: ""; position: absolute; left: -10px; top: 50%; width: 16px; height: 16px; background: #fff;
+  border-left: 2px solid var(--ink); border-bottom: 2px solid var(--ink); transform: translateY(-50%) rotate(45deg);
+}
+.bubble.angry { border-color: var(--danger); color: var(--danger); box-shadow: 3px 3px 0 var(--danger); }
+.bubble.angry::before { border-color: var(--danger); }
+.bubble.happy { border-color: var(--stamp); box-shadow: 3px 3px 0 var(--stamp); }
+.bubble.happy::before { border-color: var(--stamp); }
+.bubble.pop { animation: pop .35s cubic-bezier(.3,1.6,.5,1); }
+@keyframes pop { from { transform: scale(.85); opacity: .3; } to { transform: none; opacity: 1; } }
+.scan-wrap { position: relative; border-radius: 12px; overflow: hidden; }
+.scan-wrap input { padding-right: 130px; }
+.scan-wrap.scanning::after {
+  content: ""; position: absolute; top: 0; bottom: 0; left: -30%; width: 30%; pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgba(223, 53, 103, .4), transparent);
+  animation: sweep 1s linear infinite;
+}
+@keyframes sweep { to { left: 100%; } }
+.gate-stamp {
+  position: absolute; right: 12px; top: 50%; translate: 0 -50%; pointer-events: none;
+  font-family: var(--display); font-size: 1.05rem; line-height: 1.5; padding: 0 10px;
+  border: 3px solid currentColor; border-radius: 8px; background: rgba(255, 255, 255, .9);
+  animation: stampIn .45s cubic-bezier(.3,1.6,.5,1) both;
+}
+.gate-stamp.bad { color: var(--danger); }
+.gate-stamp.good { color: var(--stamp); }
+.confirm-row { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; margin-left: auto; }
+
+/* =========================================================
+   8. Choice tiles
+   ========================================================= */
+.grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.grid.one { grid-template-columns: 1fr; }
+.tile {
+  position: relative; overflow: hidden;
+  text-align: left; background: #fff; color: var(--ink);
+  border: 1.5px solid var(--line); border-radius: 14px; padding: 14px;
+  display: grid; gap: 2px; transition: border-color .15s, background .15s, transform .15s;
+}
+@media (hover: hover) { .tile:hover { border-color: var(--accent); transform: translateY(-1px); } }
+.tile:active { transform: scale(.98); }
+.tile .emo { font-size: 1.6rem; line-height: 1.2; }
+.tile .t { font-weight: 800; }
+.tile .s { font-size: .85rem; color: var(--muted); }
+.tile[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); box-shadow: inset 0 0 0 1.5px var(--accent); }
+.tile.row { grid-template-columns: auto 1fr; align-items: center; column-gap: 12px; }
+.tile.row .emo { grid-row: span 2; }
+.tile .deny {
+  position: absolute; inset: 0; display: grid; place-items: center; text-align: center;
+  padding: 8px; background: rgba(255, 251, 252, .88);
+  font-family: var(--mono); font-size: 11px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase;
+  color: var(--accent);
+}
+.tile .deny b { display: inline-block; border: 2px solid var(--accent); border-radius: 8px; padding: 4px 8px; transform: rotate(-8deg); line-height: 1.35; }
+.tile.denied { border-color: var(--accent); border-style: dashed; }
+.tile.denied .t, .tile.denied .s { text-decoration: line-through; }
+.tile.shake { animation: shake .5s ease; }
+.tile.shake .deny b { animation: stampIn .45s cubic-bezier(.3,1.6,.5,1) both; }
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-7px) rotate(-1deg); }
+  40% { transform: translateX(7px) rotate(1deg); }
+  60% { transform: translateX(-5px); }
+  80% { transform: translateX(4px); }
+}
+@keyframes stampIn { from { transform: rotate(-8deg) scale(2.2); opacity: 0; } to { transform: rotate(-8deg) scale(1); opacity: 1; } }
+
+/* =========================================================
+   9. Terms
+   ========================================================= */
+.terms {
+  max-height: 260px; overflow-y: auto; margin: 0; padding: 14px 14px 14px 40px;
+  border: 1.5px solid var(--line); border-radius: 12px; background: #fff;
+  display: grid; gap: 10px; font-size: .93rem;
+}
+.terms li::marker { font-family: var(--mono); color: var(--accent); }
+
+/* =========================================================
+   10. Step 6: processing, brave pause, the question
+   ========================================================= */
+.processing { font-family: var(--mono); font-size: 13px; color: var(--muted); display: grid; gap: 6px; }
+.processing .ok { color: var(--stamp); }
+.brave { display: grid; gap: 10px; justify-items: center; text-align: center; padding-block: 8px; }
+.brave .breath { font-family: var(--mono); font-size: 13px; color: var(--muted); min-height: 1.6em; }
+.question { display: grid; gap: 18px; }
+.answers { display: flex; gap: 36px; align-items: center; justify-content: center; flex-wrap: wrap; min-height: 120px; padding-block: 20px; }
+.answers.arming .btn { opacity: .35; }
+.btn.yes, .btn.no { font-size: 1rem; padding: 13px 26px; min-width: 120px; }
+.btn.yes { transition: transform .25s cubic-bezier(.3,1.6,.5,1), opacity .4s; }
+.btn.no {
+  background: #fff; color: var(--muted); border: 1.5px solid var(--line); box-shadow: none;
+  touch-action: none; z-index: 50; transition: left .25s ease, top .25s ease, transform .25s;
+}
+.btn.no.loose { position: fixed; }
+.plead { text-align: center; min-height: 1.5em; font-weight: 700; color: var(--accent); }
+
+/* =========================================================
+   11. Ticket & downloads
+   ========================================================= */
+.ticket { padding: 0; gap: 0; overflow: hidden; }
+.ticket .top { position: relative; padding: 24px 120px 20px 22px; display: grid; gap: 12px; background: var(--accent); color: var(--accent-ink); }
+.ticket .top .eyebrow { color: #ffe1ea; }
+.ticket .perf { height: 0; border-top: 2px dashed var(--line); margin: 0 18px; position: relative; }
+.ticket .perf::before, .ticket .perf::after {
+  content: ""; position: absolute; top: -13px; width: 24px; height: 24px; border-radius: 50%; background: var(--paper);
+}
+.ticket .perf::before { left: -31px; }
+.ticket .perf::after { right: -31px; }
+.ticket .body { padding: 20px 22px 24px; display: grid; gap: 14px; position: relative; }
+.ticket dl { margin: 0; display: grid; grid-template-columns: minmax(0, auto) minmax(0, 1fr); gap: 8px 16px; }
+.ticket dt { font-family: var(--mono); font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); padding-top: 3px; }
+.ticket dd { margin: 0; font-weight: 800; overflow-wrap: anywhere; }
+.ticket .no-line { font-family: var(--mono); font-size: 13px; display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; color: var(--muted); }
+.stamp {
+  position: absolute; right: 18px; top: 18px;
+  font-family: var(--display); font-size: 1.25rem; color: var(--stamp);
+  border: 3px solid var(--stamp); border-radius: 10px; padding: 2px 10px;
+  transform: rotate(-12deg); opacity: .85; pointer-events: none;
+}
+.shot { text-align: center; font-weight: 800; font-size: 1.05rem; }
+.save-row { display: grid; gap: 10px; justify-items: center; text-align: center; }
+.save-row .btn { width: 100%; max-width: 340px; }
+.portrait { margin: 18px 0 0; width: 100%; max-width: 440px; display: grid; gap: 10px; justify-items: center; }
+.portrait canvas {
+  width: 100%; height: auto; display: block; border-radius: 16px; background: #0b0508;
+  box-shadow: 0 14px 34px -16px rgba(63, 18, 41, .6);
+}
+.portrait figcaption { font-family: var(--display); font-size: 1.2rem; color: var(--ink); }
+.dl-pair { display: flex; gap: 10px; width: 100%; max-width: 340px; }
+.save-row .dl-pair .btn { flex: 1; width: auto; padding-inline: 12px; }
+.btn.dl-black { background: #1a1014; box-shadow: 0 4px 0 #000; color: #fff; }
+.btn.dl-white { background: #fff; color: var(--ink); border: 1.5px solid var(--line); box-shadow: 0 4px 0 var(--line); }
+
+/* =========================================================
+   Step 3: photo booth (flash + Polaroid)
+   ========================================================= */
+.booth { display: flex; align-items: center; justify-content: center; gap: 18px; flex-wrap: wrap; }
+.booth .bear { width: 130px; height: 130px; }
+.polaroid {
+  margin: 0; width: 170px; padding: 10px 10px 12px; background: #fff; border-radius: 4px;
+  box-shadow: 0 12px 26px -14px rgba(63, 18, 41, .55), 0 0 0 1px rgba(63, 18, 41, .06);
+  display: grid; gap: 8px; transform: rotate(-4deg);
+}
+.polaroid-photo {
+  aspect-ratio: 1; background: var(--accent-soft); display: grid; place-items: center;
+  overflow: hidden; font-size: 2.4rem;
+}
+.polaroid-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.polaroid-caption { font-family: var(--mono); font-size: 11px; line-height: 1.4; color: var(--muted); text-align: center; }
+.polaroid.empty { opacity: .75; border: 2px dashed var(--line); box-shadow: none; }
+.polaroid.drop { animation: drop .8s cubic-bezier(.3,1.5,.5,1) both; }
+@keyframes drop {
+  from { transform: translateY(-50px) rotate(-16deg); opacity: 0; }
+  to { transform: rotate(-4deg); opacity: 1; }
+}
+.flash { position: fixed; inset: 0; background: #fff; opacity: 0; pointer-events: none; z-index: 90; }
+.flash.go { animation: flash .7s ease-out; }
+@keyframes flash { 0% { opacity: .95; } 100% { opacity: 0; } }
+
+/* =========================================================
+   Step 4: quiz
+   ========================================================= */
+.quiz { display: grid; gap: 14px; }
+.quiz.swap { animation: enter .5s ease both; }
+.quiz-head { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: 12px; }
+.quiz-head .bear { width: 90px; height: 90px; }
+.quiz-ask { display: grid; gap: 4px; }
+.quiz-q { font-family: var(--display); font-size: clamp(1.15rem, 4.6vw, 1.4rem); line-height: 1.2; }
+.quiz-opts .tile { padding-right: 118px; min-height: 52px; align-content: center; }
+.quiz-opts .tile:disabled { cursor: default; }
+.qstamp {
+  position: absolute; right: 10px; top: 50%; translate: 0 -50%; white-space: nowrap;
+  font-family: var(--display); font-size: .82rem; line-height: 1.5; padding: 0 8px;
+  border: 2.5px solid currentColor; border-radius: 8px; background: rgba(255, 255, 255, .92);
+  animation: stampIn .45s cubic-bezier(.3,1.6,.5,1) both;
+}
+.qstamp.good { color: var(--stamp); }
+.qstamp.bad { color: var(--danger); }
+.quiz-opts .tile .qstamp + .qstamp { display: none; }
+.quiz-next { display: flex; justify-content: flex-end; }
+.quiz-result { display: grid; justify-items: center; text-align: center; gap: 6px; padding-block: 6px; }
+.quiz-percent { font-family: var(--display); font-size: clamp(3.4rem, 16vw, 4.6rem); line-height: 1; color: var(--accent); font-variant-numeric: tabular-nums; }
+
+/* =========================================================
+   Step 6: mood sliders
+   ========================================================= */
+.sliders { display: grid; gap: 12px; }
+.slider { display: grid; gap: 6px; padding: 12px 14px; border: 1.5px solid var(--line); border-radius: 12px; background: #fff; }
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.slider-value { font-weight: 800; }
+.slider-value.bump { animation: pop .3s cubic-bezier(.3,1.6,.5,1); display: inline-block; }
+.slider input[type="range"] { width: 100%; margin: 0; height: 30px; accent-color: var(--accent); cursor: pointer; }
+.slider-ends { display: flex; justify-content: space-between; gap: 10px; font-family: var(--mono); font-size: 11px; color: var(--muted); }
+
+/* =========================================================
+   Step 8: catch-the-hearts game
+   ========================================================= */
+.game { display: grid; gap: 8px; }
+.game-hud {
+  display: flex; justify-content: space-between; gap: 10px;
+  font-family: var(--mono); font-size: 15px; color: var(--muted); font-variant-numeric: tabular-nums;
+}
+.game-hud b { color: var(--accent); font-size: 1.2rem; }
+.game-stage {
+  position: relative; height: min(360px, 52vh); border-radius: 14px; overflow: hidden;
+  border: 1.5px solid var(--line);
+  background: linear-gradient(#fff5f8, var(--accent-soft));
+}
+.game-stage canvas { width: 100%; height: 100%; display: block; touch-action: none; cursor: pointer; }
+.game-overlay {
+  position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: 8px;
+  padding: 16px; text-align: center; background: rgba(255, 251, 252, .88);
+}
+.game-overlay .bear { width: 96px; height: 96px; }
+.game-title { font-family: var(--display); font-size: clamp(1.4rem, 6vw, 1.9rem); line-height: 1.1; color: var(--ink); }
+.game-title.pop { animation: pop .35s cubic-bezier(.3,1.6,.5,1); }
+.game-overlay .small { max-width: 32ch; }
+
+/* =========================================================
+   Step 9: signature pad
+   ========================================================= */
+.sign-pad {
+  position: relative; height: 140px; border: 1.5px dashed var(--accent); border-radius: 12px; background: #fff;
+  background-image: linear-gradient(transparent calc(100% - 34px), var(--line) calc(100% - 34px), var(--line) calc(100% - 33px), transparent calc(100% - 33px));
+}
+.sign-pad canvas { width: 100%; height: 100%; display: block; touch-action: none; cursor: crosshair; }
+.sign-hint {
+  position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none;
+  font-family: var(--display); font-size: 1.3rem; color: var(--muted); opacity: .45;
+}
+.sign-row { display: flex; justify-content: flex-end; }

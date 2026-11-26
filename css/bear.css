@@ -1,0 +1,58 @@
+/* =========================================================
+   12. The bear (one SVG, many moods)
+   Every face part has class "f" plus "on-<mood>" for the moods it shows in.
+   ========================================================= */
+.bear-wrap { display: grid; place-items: center; }
+.bear { width: 150px; height: 150px; overflow: visible; }
+.small-bear .bear { width: 110px; height: 110px; }
+.bear * { transform-box: fill-box; transform-origin: center; }
+.bear .f { display: none; }
+.bear.nervous .on-nervous, .bear.sad .on-sad, .bear.happy .on-happy, .bear.angry .on-angry,
+.bear.think .on-think, .bear.suspicious .on-suspicious, .bear.shocked .on-shocked, .bear.bouncer .on-bouncer,
+.bear.camera .on-camera, .bear.covered .on-covered { display: inline; }
+
+.bear .b-body { transform-origin: 50% 100%; animation: sway 2.4s ease-in-out infinite; }
+.bear .blink { animation: blink 4s infinite; }
+.bear .sweat { animation: drip 1.6s ease-in infinite; }
+.bear .tear { animation: fall 1s ease-in infinite; }
+.bear .tear + .tear { animation-delay: .4s; }
+.bear .magnifier { animation: bob 1.2s ease-in-out infinite; }
+.bear .steam { opacity: 0; animation: steam 1s ease-out infinite; }
+.bear .steam + .steam { animation-delay: .5s; }
+.bear.bouncer .b-body { animation: sway 4s ease-in-out infinite; }
+.bear.think .b-body { animation: ponder 2s ease-in-out infinite; }
+.bear.think .pupils { animation: look 1.4s ease-in-out infinite; }
+.bear.suspicious .b-body { animation: lean 1.6s ease-in-out infinite; }
+.bear.suspicious .magnifier { animation: inspect 1.8s ease-in-out infinite; }
+.bear.suspicious.closer .b-body { animation: leanClose 1.1s ease-in-out infinite; }
+.bear.angry { animation: rage .15s linear infinite; }
+.bear.angry .b-body { animation: none; }
+.bear.shocked { animation: jolt .45s ease; }
+.bear.sad .b-body { animation: droop .5s ease forwards; }
+.bear.breathe .b-body { animation: breathe 2.2s ease-in-out infinite; }
+.bear.happy { animation: hop .55s ease-in-out infinite; }
+.bear.happy .b-body { animation: wiggle .55s ease-in-out infinite; }
+.bear.happy .b-heart { animation: pulse .55s ease-in-out infinite; }
+.bear.happy .floaty { animation: floaty 1.6s ease-out infinite; opacity: 0; }
+.bear.happy .floaty:nth-child(2) { animation-delay: .4s; }
+.bear.happy .floaty:nth-child(3) { animation-delay: .8s; }
+.bear.happy .floaty:nth-child(4) { animation-delay: 1.2s; }
+@keyframes sway { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
+@keyframes blink { 0%, 92%, 100% { transform: scaleY(1); } 95% { transform: scaleY(.1); } }
+@keyframes drip { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(14px); opacity: 0; } }
+@keyframes droop { to { transform: translateY(6px) rotate(-4deg); } }
+@keyframes fall { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(22px); opacity: 0; } }
+@keyframes hop { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-16px); } }
+@keyframes wiggle { 0%, 100% { transform: rotate(-6deg); } 50% { transform: rotate(6deg); } }
+@keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.18); } }
+@keyframes floaty { 0% { transform: translateY(0) scale(.6); opacity: 0; } 20% { opacity: 1; } 100% { transform: translateY(-50px) scale(1.1); opacity: 0; } }
+@keyframes look { 0%, 100% { transform: translateX(-4px); } 50% { transform: translateX(4px); } }
+@keyframes ponder { 0%, 100% { transform: rotate(-6deg); } 50% { transform: rotate(-2deg); } }
+@keyframes bob { 0%, 100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-5px) rotate(-6deg); } }
+@keyframes inspect { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(-58px, -24px) scale(1.15); } }
+@keyframes lean { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.07) translateY(-3px); } }
+@keyframes leanClose { 0%, 100% { transform: scale(1.12) rotate(-4deg); } 50% { transform: scale(1.18) rotate(3deg); } }
+@keyframes rage { 0%, 100% { transform: translateX(-2px); } 50% { transform: translateX(2px); } }
+@keyframes steam { 0% { transform: translateY(0) scale(.6); opacity: .9; } 100% { transform: translateY(-20px) scale(1.3); opacity: 0; } }
+@keyframes jolt { 0%, 100% { transform: scale(1); } 40% { transform: scale(1.15) translateY(-10px); } }
+@keyframes breathe { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.07); } }

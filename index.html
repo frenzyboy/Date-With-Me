@@ -5,6 +5,7 @@
 <title>Temporary Date Reservation</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23df3567'/%3E%3Cpath d='M32 52C14 40 8 30 12 21c3-7 13-9 20 0 7-9 17-7 20 0 4 9-2 19-20 31z' fill='%23fff'/%3E%3C/svg%3E">
 <meta name="theme-color" content="#fbe3e9">
+<meta name="robots" content="noindex, nofollow">
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,6 +13,8 @@
 <link rel="stylesheet" href="css/base.css">
 <link rel="stylesheet" href="css/steps.css">
 <link rel="stylesheet" href="css/bear.css">
+<link rel="stylesheet" href="css/extras.css">
+<link rel="stylesheet" href="css/gallery.css">
 <link rel="stylesheet" href="css/responsive.css">
 
 <!-- Body: background layers, music button and the step cards. -->
@@ -30,6 +33,45 @@
   </svg>
 </button>
 
+<!-- Envelope intro: "You have 1 new letter" (Intro) -->
+<div class="intro" id="intro" hidden>
+  <span class="eyebrow">Temporary Date Reservation System<b>™</b></span>
+  <h1 id="introTitle"></h1>
+  <button class="envelope" id="introEnvelope" type="button" aria-label="Open the letter">
+    <span class="env-back"></span>
+    <span class="env-letter"><span id="introLetter"></span></span>
+    <span class="env-front"></span>
+    <span class="env-flap"></span>
+    <span class="seal" aria-hidden="true">❤</span>
+  </button>
+  <p class="small" id="introHint" aria-live="polite"></p>
+</div>
+
+<!-- The small bear in the corner (Buddy) -->
+<div class="buddy" id="buddy" hidden>
+  <p class="buddy-bubble" id="buddyBubble" aria-live="polite" hidden></p>
+  <div class="buddy-bear" id="buddyBear" aria-hidden="true"></div>
+  <span class="buddy-name" id="buddyName" hidden></span>
+</div>
+
+<!-- Big photo viewer for the secret room photos (Lightbox) -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Photo" hidden>
+  <button class="lb-close" id="lbClose" type="button" aria-label="Close">×</button>
+  <button class="lb-nav prev" id="lbPrev" type="button" aria-label="Previous photo">‹</button>
+  <figure class="lb-figure"><img id="lbImg" alt="" draggable="false"><figcaption id="lbCap"></figcaption><p class="lb-hint" id="lbHint">Pinch or double-tap to zoom 🔍</p></figure>
+  <button class="lb-nav next" id="lbNext" type="button" aria-label="Next photo">›</button>
+</div>
+
+<!-- Easter egg: tap any bear 10 times -->
+<div class="egg" id="egg" role="dialog" aria-modal="true" aria-labelledby="eggTitle" hidden>
+  <div class="egg-card">
+    <div class="bear-wrap small-bear" id="eggBear" aria-hidden="true"></div>
+    <h2 id="eggTitle"></h2>
+    <p id="eggText"></p>
+    <button class="btn" id="eggClose" type="button">Aww, okay 💗</button>
+  </div>
+</div>
+
 <main class="wrap">
   <header class="masthead">
     <span class="sys">Temporary Date Reservation System<b>™</b></span>
@@ -38,7 +80,7 @@
 
   <div class="progress" aria-live="polite">
     <div class="bar"><div class="fill" id="fill"></div></div>
-    <div class="meta"><span id="stepLabel">Step 1 of 10 · Security check</span><span id="stepStatus">Processing your reservation…</span></div>
+    <div class="meta"><span id="stepLabel">Step 1 of 12 · Security check</span><span id="stepStatus">Processing your reservation…</span></div>
   </div>
 
   <!-- 1. Security checkpoint, then the welcome notice -->
@@ -80,8 +122,29 @@
     </div>
   </section>
 
-  <!-- 2. Applicant details -->
-  <section class="card" data-step="2" data-key="applicant" data-name="Verification" hidden>
+  <!-- 2. Name the bear -->
+  <section class="card" data-step="2" data-key="bearname" data-name="Your guide" hidden>
+    <span class="eyebrow">Orientation · Your guide</span>
+    <h2 tabindex="-1">Meet your guide 🐻</h2>
+    <div class="bouncer">
+      <div class="bear-wrap" id="bearNameBear" aria-hidden="true"></div>
+      <p class="bubble" id="bearNameBubble" aria-live="polite"></p>
+    </div>
+    <p class="small">Every applicant gets a personal bear for the booking. This one doesn't have a name yet. Pick one, or make one up.</p>
+    <div class="grid" id="bearNames" role="group" aria-label="Name ideas"></div>
+    <div class="field">
+      <label class="label" for="bearNameInput">Or type your own</label>
+      <input type="text" id="bearNameInput" maxlength="20" autocomplete="off" spellcheck="false" placeholder="e.g. Captain Cuddles">
+    </div>
+    <p class="note" id="bearNameNote" aria-live="polite"></p>
+    <div class="actions">
+      <span></span>
+      <button class="btn" data-next id="bearNameNext" disabled>That's the name</button>
+    </div>
+  </section>
+
+  <!-- 3. Applicant details -->
+  <section class="card" data-step="3" data-key="applicant" data-name="Verification" hidden>
     <span class="eyebrow">Section A · Applicant verification</span>
     <h2 tabindex="-1">Now, the rest of your details</h2>
     <div class="field">
@@ -111,8 +174,8 @@
     <p class="note no-back-note" id="noBackNote" aria-live="polite"></p>
   </section>
 
-  <!-- 3. Photo booth -->
-  <section class="card" data-step="3" data-key="photo" data-name="Photo booth" hidden>
+  <!-- 4. Photo booth -->
+  <section class="card" data-step="4" data-key="photo" data-name="Photo booth" hidden>
     <span class="eyebrow">Section B · Photo booth</span>
     <h2 tabindex="-1">Say cheese! 🧀</h2>
     <div class="booth">
@@ -138,8 +201,8 @@
     </div>
   </section>
 
-  <!-- 4. Compatibility quiz -->
-  <section class="card" data-step="4" data-key="quiz" data-name="Compatibility quiz" hidden>
+  <!-- 5. Compatibility quiz -->
+  <section class="card" data-step="5" data-key="quiz" data-name="Compatibility quiz" hidden>
     <span class="eyebrow">Section C · Compatibility test</span>
     <h2 tabindex="-1">How well do you know <span class="js-me"></span>?</h2>
     <p class="small">5 quick questions. No pressure. (A little pressure.)</p>
@@ -168,8 +231,8 @@
     </div>
   </section>
 
-  <!-- 5. Activity -->
-  <section class="card" data-step="5" data-key="activity" data-name="Activity" hidden>
+  <!-- 6. Activity -->
+  <section class="card" data-step="6" data-key="activity" data-name="Activity" hidden>
     <span class="eyebrow">Section D · Choose your package</span>
     <h2 tabindex="-1">What should the Temporary Date™ include?</h2>
     <div class="grid" id="activities" role="group" aria-label="Activities"></div>
@@ -180,8 +243,8 @@
     </div>
   </section>
 
-  <!-- 6. Mood & snacks -->
-  <section class="card" data-step="6" data-key="mood" data-name="Mood &amp; snacks" hidden>
+  <!-- 7. Mood & snacks -->
+  <section class="card" data-step="7" data-key="mood" data-name="Mood &amp; snacks" hidden>
     <span class="eyebrow">Section E · Date-day settings</span>
     <h2 tabindex="-1">Set your date-day mood</h2>
     <p class="small">Drag the sliders. <span class="js-me"></span> will prepare accordingly.</p>
@@ -193,9 +256,22 @@
     </div>
   </section>
 
-  <!-- 7. Schedule -->
-  <section class="card" data-step="7" data-key="schedule" data-name="Schedule" hidden>
-    <span class="eyebrow">Section F · Scheduling</span>
+  <!-- 8. Pickup line rating -->
+  <section class="card" data-step="8" data-key="pickup" data-name="Pickup lines" hidden>
+    <span class="eyebrow">Section F · Quality control</span>
+    <h2 tabindex="-1">Rate <span class="js-me"></span>'s pickup lines</h2>
+    <p class="small">He's been practicing. Be honest. (Be nice.)</p>
+    <div class="pickups" id="pickups"></div>
+    <p class="note" id="pickupNote" aria-live="polite"></p>
+    <div class="actions">
+      <button class="btn ghost" data-back>Back</button>
+      <button class="btn" data-next id="pickupNext" disabled>Submit ratings</button>
+    </div>
+  </section>
+
+  <!-- 9. Schedule -->
+  <section class="card" data-step="9" data-key="schedule" data-name="Schedule" hidden>
+    <span class="eyebrow">Section G · Scheduling</span>
     <h2 tabindex="-1">When are you available?</h2>
     <div class="field">
       <span class="label">Available dates (temporary hold)</span>
@@ -213,9 +289,9 @@
     </div>
   </section>
 
-  <!-- 8. Catch the hearts mini-game -->
-  <section class="card" data-step="8" data-key="game" data-name="Heart catcher" hidden>
-    <span class="eyebrow">Section G · Mini-game</span>
+  <!-- 10. Catch the hearts mini-game -->
+  <section class="card" data-step="10" data-key="game" data-name="Heart catcher" hidden>
+    <span class="eyebrow">Section H · Mini-game</span>
     <h2 tabindex="-1">Catch the hearts! 💘</h2>
     <p class="small">10 seconds. Tap as many falling hearts as you can.</p>
     <div class="game">
@@ -229,6 +305,7 @@
           <div class="bear-wrap small-bear" id="bearGame" aria-hidden="true"></div>
           <p class="game-title" id="gameTitle" aria-live="polite">Ready?</p>
           <p class="small" id="gameSub"></p>
+          <p class="game-record" id="gameRecord"></p>
           <button class="btn" id="gameStart" type="button">Start 💘</button>
         </div>
       </div>
@@ -239,9 +316,9 @@
     </div>
   </section>
 
-  <!-- 9. Terms & signature -->
-  <section class="card" data-step="9" data-key="terms" data-name="Terms" hidden>
-    <span class="eyebrow">Section H · Terms &amp; conditions</span>
+  <!-- 11. Terms & signature -->
+  <section class="card" data-step="11" data-key="terms" data-name="Terms" hidden>
+    <span class="eyebrow">Section I · Terms &amp; conditions</span>
     <h2 tabindex="-1">The fine print (please read, it's cute)</h2>
     <ol class="terms" id="terms"></ol>
     <label class="check" for="agree">
@@ -254,7 +331,7 @@
         <canvas id="signPad" aria-label="Signature pad"></canvas>
         <span class="sign-hint" id="signHint" aria-hidden="true">Sign here</span>
       </div>
-      <div class="sign-row"><button class="btn ghost" id="signClear" type="button">Oops, let me sign prettier</button></div>
+      <div class="sign-row"><button class="btn sign-clear" id="signClear" type="button" hidden>↺ Clear and sign again</button></div>
     </div>
     <div class="actions">
       <button class="btn ghost" data-back>Back</button>
@@ -262,9 +339,9 @@
     </div>
   </section>
 
-  <!-- 10. Final question -->
-  <section class="card" data-step="10" data-key="final" data-name="Confirmation" hidden>
-    <span class="eyebrow">Section I · Final confirmation</span>
+  <!-- 12. Final question -->
+  <section class="card" data-step="12" data-key="final" data-name="Confirmation" hidden>
+    <span class="eyebrow">Section J · Final confirmation</span>
     <div class="processing" id="processing" aria-live="polite"></div>
     <div class="brave" id="brave" hidden>
       <div class="bear-wrap" id="bearBrave" aria-hidden="true"></div>
@@ -283,8 +360,8 @@
     </div>
   </section>
 
-  <!-- 11. Ticket (not counted in the progress bar) -->
-  <section class="card ticket" data-step="11" data-key="ticket" data-name="Confirmed" hidden>
+  <!-- 13. Ticket (not counted in the progress bar) -->
+  <section class="card ticket" data-step="13" data-key="ticket" data-name="Confirmed" hidden>
     <div class="top">
       <span class="eyebrow">Booking confirmed</span>
       <h2 tabindex="-1">It's a date! 💖</h2>
@@ -300,6 +377,8 @@
         <dt>Date</dt><dd id="tDate"></dd>
         <dt>Time</dt><dd id="tTime"></dd>
         <dt>Heart catcher</dt><dd id="tHearts"></dd>
+        <dt>Pickup lines</dt><dd id="tPickup"></dd>
+        <dt>Bear on duty</dt><dd id="tBear"></dd>
         <!-- one row per mood slider is inserted here (App.fillMoodRows) -->
         <dt hidden id="tMoods"></dt>
         <dt>Compatibility</dt><dd id="tCompat"></dd>
@@ -313,6 +392,8 @@
     <button class="btn dl-btn" id="dlBtn" hidden>Download ticket 🎟️</button>
     <p class="shot">Save the ticket and send it to <span class="js-me"></span> 📸</p>
     <p class="small" id="dlStatus" aria-live="polite"></p>
+    <button class="btn share-btn" id="shareBtn" type="button" hidden></button>
+    <p class="small" id="shareStatus" aria-live="polite"></p>
     <figure class="portrait">
       <canvas id="portraitCanvas" role="img" aria-label="A portrait made from song lyrics"></canvas>
       <figcaption>Every word, for you 💌</figcaption>
@@ -323,11 +404,137 @@
       </div>
       <p class="small" id="portraitStatus" aria-live="polite"></p>
     </figure>
+    <div class="room-door">
+      <p class="small">Psst… ticket holders get access to something else 👀</p>
+      <button class="btn" id="roomBtn" type="button">Enter the secret room 🔐</button>
+      <button class="btn ghost js-restart" type="button"></button>
+    </div>
   </div>
+
+  <!-- Secret room: home page after the ticket. Not a data-step, so it doesn't count in the progress bar. -->
+  <section class="card room" id="room" data-name="Secret room" hidden>
+    <span class="eyebrow">Members only · Ticket <b class="js-ticket-no"></b></span>
+    <div class="room-head">
+      <div class="bear-wrap small-bear" id="bearRoom" aria-hidden="true"></div>
+      <div class="room-hello">
+        <h1 tabindex="-1" id="roomTitle"></h1>
+        <p class="small" id="roomIntro"></p>
+      </div>
+    </div>
+    <!-- Official notice: made just for her, comes down at the end of the contract unless extended (CONFIG.room.notice) -->
+    <article class="room-notice">
+      <span class="label" id="noticeTitle"></span>
+      <div class="notice-text" id="noticeText"></div>
+      <p class="notice-status" id="noticeStatus"></p>
+      <span class="notice-stamp" id="noticeStamp" aria-hidden="true"></span>
+    </article>
+    <article class="room-letter">
+      <span class="label" id="letterTitle"></span>
+      <button class="envelope small-env" id="letterEnv" type="button" aria-label="Open the letter">
+        <span class="env-back"></span>
+        <span class="env-letter"><span>💌</span></span>
+        <span class="env-front"></span>
+        <span class="env-flap"></span>
+        <span class="seal" aria-hidden="true">❤</span>
+      </button>
+      <p class="small" id="letterHint" aria-live="polite"></p>
+      <div class="letter-body" id="letterBody" hidden></div>
+    </article>
+    <article class="room-count">
+      <span class="label" id="countTitle"></span>
+      <div class="count-boxes" id="countBoxes">
+        <span><b id="cd-days">00</b>days</span>
+        <span><b id="cd-hours">00</b>hours</span>
+        <span><b id="cd-mins">00</b>min</span>
+        <span><b id="cd-secs">00</b>sec</span>
+      </div>
+      <p class="small" id="countMsg" aria-live="off"></p>
+      <button class="btn dl-btn cal-btn" id="calBtn" type="button" hidden></button>
+      <p class="small" id="calStatus" aria-live="polite"></p>
+    </article>
+    <div class="carousel" id="carousel" role="region" aria-roledescription="carousel" aria-label="Photos">
+      <div class="car-track" id="carTrack" tabindex="0"></div>
+      <button class="car-nav prev" id="carPrev" type="button" aria-label="Previous photo">‹</button>
+      <button class="car-nav next" id="carNext" type="button" aria-label="Next photo">›</button>
+      <div class="car-dots" id="carDots"></div>
+    </div>
+    <!-- Photo sections (Gallery, CONFIG.room.gallery) -->
+    <article class="room-gallery" id="galWall">
+      <span class="label js-gal-title"></span>
+      <p class="small js-gal-hint"></p>
+      <div class="wall" id="wall"></div>
+    </article>
+    <article class="room-gallery" id="galInstant">
+      <span class="label js-gal-title"></span>
+      <p class="small js-gal-hint" aria-live="polite"></p>
+      <div class="instants" id="instants"></div>
+    </article>
+    <article class="room-reasons">
+      <span class="label" id="reasonsTitle"></span>
+      <p class="small" id="reasonsHint"></p>
+      <div class="reasons" id="reasons"></div>
+    </article>
+    <article class="room-gallery" id="galOutfits">
+      <span class="label js-gal-title"></span>
+      <p class="small js-gal-hint" aria-live="polite"></p>
+      <div class="fan" id="fan"></div>
+    </article>
+    <article class="room-note">
+      <span class="label" id="roomDateTitle"></span>
+      <p id="roomDateNote"></p>
+    </article>
+    <article class="room-note letter">
+      <span class="label" id="roomMeTitle"></span>
+      <p id="roomMeNote"></p>
+      <p class="room-sign" id="roomSign"></p>
+    </article>
+    <!-- Prank door: refuses to open until she taps it enough times, then: a frog saying sorry (CONFIG.room.prank) -->
+    <article class="room-secret">
+      <span class="label" id="prankTitle"></span>
+      <button class="door prank-door" id="prankDoor" type="button" aria-label="A door">
+        <span class="door-inside prank-inside" aria-hidden="true"><span class="prank-frog">🐸</span><span class="prank-sorry" id="prankSorry"></span></span>
+        <span class="door-panel"><span class="door-sign" id="prankSign"></span><span class="door-knob"></span></span>
+      </button>
+      <p class="small" id="prankHint" aria-live="polite"></p>
+    </article>
+    <article class="room-gallery" id="galScratch">
+      <span class="label js-gal-title"></span>
+      <p class="small js-gal-hint" aria-live="polite"></p>
+      <div class="scratch" id="scratch"><img alt=""><canvas aria-label="Scratch card: rub it to reveal a photo"></canvas></div>
+      <p class="scratch-caption" id="scratchCaption" hidden></p>
+    </article>
+    <!-- The door she doesn't have to open: a more honest note from {me} (CONFIG.room.door) -->
+    <article class="room-secret">
+      <span class="label" id="doorTitle"></span>
+      <button class="door" id="secretDoor" type="button" aria-label="Open the door">
+        <span class="door-inside" aria-hidden="true">💗</span>
+        <span class="door-panel"><span class="door-sign" id="doorSign"></span><span class="door-knob"></span></span>
+      </button>
+      <p class="small" id="doorHint" aria-live="polite"></p>
+      <div class="knock" id="doorKnock" aria-live="polite" hidden></div>
+      <div class="letter-body" id="doorBody" hidden></div>
+    </article>
+    <!-- The last door, at the very end: an honest message from {me} (CONFIG.room.lastDoor) -->
+    <article class="room-secret">
+      <span class="label" id="lastDoorTitle"></span>
+      <button class="door last-door" id="lastDoor" type="button" aria-label="Open the last door">
+        <span class="door-inside last-inside" aria-hidden="true">✨</span>
+        <span class="door-panel"><span class="door-sign" id="lastDoorSign"></span><span class="door-knob"></span></span>
+      </button>
+      <p class="small" id="lastDoorHint" aria-live="polite"></p>
+      <div class="knock" id="lastDoorKnock" aria-live="polite" hidden></div>
+      <div class="letter-body" id="lastDoorBody" hidden></div>
+    </article>
+    <div class="actions">
+      <button class="btn ghost" id="roomBack" type="button">← <span id="roomBackLabel"></span></button>
+      <button class="btn ghost js-restart" type="button"></button>
+    </div>
+  </section>
 </main>
 
 <!-- Scripts: plain (non-module) files so the page also opens straight from disk. Order matters. -->
 <script src="js/config.js"></script>
+<script src="js/core/name-lock.js"></script>
 <script src="js/lyrics.js"></script>
 <script src="js/core/helpers.js"></script>
 <script src="js/core/pacer.js"></script>
@@ -336,16 +543,26 @@
 <script src="js/core/music-player.js"></script>
 <script src="js/core/downloads.js"></script>
 <script src="js/core/confetti.js"></script>
+<script src="js/core/sfx.js"></script>
+<script src="js/core/progress.js"></script>
+<script src="js/core/buddy.js"></script>
+<script src="js/core/easter-egg.js"></script>
+<script src="js/core/share.js"></script>
 <script src="js/render/portrait-renderer.js"></script>
 <script src="js/render/ticket-renderer.js"></script>
+<script src="js/steps/intro.js"></script>
 <script src="js/steps/name-gate.js"></script>
 <script src="js/steps/applicant-form.js"></script>
 <script src="js/steps/choice-tiles.js"></script>
+<script src="js/steps/bear-name.js"></script>
 <script src="js/steps/photo-booth.js"></script>
 <script src="js/steps/quiz.js"></script>
 <script src="js/steps/mood-sliders.js"></script>
+<script src="js/steps/pickup-lines.js"></script>
 <script src="js/steps/heart-game.js"></script>
 <script src="js/steps/signature-pad.js"></script>
 <script src="js/steps/final-question.js"></script>
 <script src="js/steps/runaway-button.js"></script>
+<script src="js/steps/gallery.js"></script>
+<script src="js/steps/secret-room.js"></script>
 <script src="js/app.js"></script>

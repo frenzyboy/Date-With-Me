@@ -16,9 +16,8 @@ class PhotoBooth {
     $("#shyBtn").addEventListener("click", () => this.shy());
   }
 
-  snap() {
-    restart($("#flash"), "go");
-    this.shutter();
+  snap(quiet = false) {
+    if (!quiet) { restart($("#flash"), "go"); this.app.sfx.shutter(); }
     this.polaroid.classList.remove("empty");
     restart(this.polaroid, "drop");
     $("#polaroidCaption").textContent = CONFIG.booth.caption;
@@ -30,24 +29,10 @@ class PhotoBooth {
   }
 
   shy() {
+    this.wasShy = true;
     this.mascot.set("covered");
     this.note.textContent = fill(CONFIG.booth.shy);
     this.next.disabled = false;
     this.next.textContent = "Continue without photo";
-  }
-
-  // A tiny camera "click" made with Web Audio (only when the music isn't muted)
-  shutter() {
-    try {
-      if (this.app.music.muted) return;
-      const ctx = this.ctx || (this.ctx = new (window.AudioContext || window.webkitAudioContext)());
-      const len = Math.floor(ctx.sampleRate * 0.09);
-      const buf = ctx.createBuffer(1, len, ctx.sampleRate), d = buf.getChannelData(0);
-      for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 4);
-      const src = ctx.createBufferSource(), gain = ctx.createGain();
-      src.buffer = buf; gain.gain.value = 0.5;
-      src.connect(gain).connect(ctx.destination);
-      src.start();
-    } catch {}
   }
 }

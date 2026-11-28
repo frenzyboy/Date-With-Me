@@ -231,6 +231,12 @@
 .game-title { font-family: var(--display); font-size: clamp(1.4rem, 6vw, 1.9rem); line-height: 1.1; color: var(--ink); }
 .game-title.pop { animation: pop .35s cubic-bezier(.3,1.6,.5,1); }
 .game-overlay .small { max-width: 32ch; }
+.game-record {
+  max-width: 34ch; padding: 4px 12px; border-radius: 99px; background: #fff; border: 1.5px solid var(--line);
+  font-family: var(--mono); font-size: 12px; line-height: 1.5; color: var(--ink);
+}
+.game-record.beat { border-color: #f5b301; background: #fff7d6; font-weight: 500; }
+.game-record.pop { animation: pop .4s cubic-bezier(.3,1.6,.5,1); }
 
 /* =========================================================
    Step 9: signature pad
@@ -245,3 +251,55 @@
   font-family: var(--display); font-size: 1.3rem; color: var(--muted); opacity: .45;
 }
 .sign-row { display: flex; justify-content: flex-end; }
+.btn.sign-clear {
+  min-height: 40px; padding: 8px 16px; font-size: .9rem;
+  background: #fff; color: var(--accent); border: 1.5px solid var(--accent); box-shadow: 0 3px 0 var(--line);
+}
+.btn.sign-clear:active { box-shadow: 0 1px 0 var(--line); }
+
+/* =========================================================
+   Secret room: home page after the ticket
+   ========================================================= */
+.room-door { margin-top: 26px; display: grid; gap: 10px; justify-items: center; width: 100%; padding-top: 22px; border-top: 2px dashed var(--line); }
+.room-head { display: flex; align-items: center; gap: 14px; }
+.room-head .bear { width: 92px; height: 92px; flex: none; }
+.room-hello { display: grid; gap: 6px; min-width: 0; }
+.room-hello h1 { font-size: clamp(1.6rem, 6.5vw, 2.2rem); }
+
+.carousel { position: relative; display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
+.car-track {
+  display: flex; overflow-x: auto; scroll-snap-type: x mandatory;
+  min-width: 0; scrollbar-width: none; border-radius: 14px; outline-offset: 4px;
+}
+.car-track::-webkit-scrollbar { display: none; }
+.slide { flex: 0 0 100%; scroll-snap-align: center; margin: 0; display: grid; gap: 10px; padding: 10px 10px 12px; background: #fff; border-radius: 14px; border: 1.5px solid var(--line); }
+.slide-img { aspect-ratio: 4 / 5; max-height: 62vh; width: 100%; border-radius: 8px; overflow: hidden; position: relative; display: grid; place-items: center; background: var(--accent-soft); }
+.slide-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.slide figcaption { font-family: var(--display); font-size: 1.1rem; text-align: center; color: var(--ink); }
+.sample.s0 { background: linear-gradient(150deg, #ffd1dc, #f7a6bd); }
+.sample.s1 { background: linear-gradient(150deg, #ffe7cf, #f3b98f); }
+.sample.s2 { background: linear-gradient(150deg, #ffd6c4, #e98aa6 60%, #b65f97); }
+.sample.s3 { background: linear-gradient(150deg, #e6defc, #f4b6cf); }
+.sample-emo { font-size: 4.5rem; filter: drop-shadow(0 6px 10px rgba(63, 18, 41, .25)); }
+.sample-tag {
+  position: absolute; left: 10px; top: 10px; font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
+  background: rgba(255, 255, 255, .8); color: var(--muted); padding: 3px 8px; border-radius: 99px;
+}
+.car-nav {
+  position: absolute; top: calc(50% - 34px); width: 40px; height: 40px; border-radius: 50%;
+  border: 1.5px solid var(--line); background: rgba(255, 251, 252, .92); color: var(--accent);
+  font-size: 1.6rem; line-height: 1; display: grid; place-items: center; padding: 0 0 3px;
+  box-shadow: 0 6px 16px -8px rgba(63, 18, 41, .5); touch-action: manipulation;
+}
+.car-nav.prev { left: 18px; }
+.car-nav.next { right: 18px; }
+.car-dots { display: flex; justify-content: center; gap: 8px; }
+.car-dot { width: 9px; height: 9px; padding: 0; border: 0; border-radius: 99px; background: var(--line); transition: width .25s, background .25s; }
+.car-dot[aria-current="true"] { width: 24px; background: var(--accent); }
+
+.room-note { display: grid; gap: 8px; padding: 16px 18px; border-radius: 14px; background: var(--accent-soft); }
+.room-note.letter { background: #fff; border: 1.5px dashed var(--line); }
+.room-sign { font-family: var(--display); color: var(--accent); text-align: right; font-size: 1.15rem; }
+
+/* "Start over" button wiggles when it asks for the second tap */
+.js-restart.shake { animation: shake .5s ease; }

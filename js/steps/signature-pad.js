@@ -17,6 +17,7 @@ class SignaturePad {
       this.cur = [this.point(e)];
       this.strokes.push(this.cur);
       $("#signHint").hidden = true;
+      $("#signClear").hidden = false;   // the reset button shows once there's something to clear
       this.redraw();
     });
     canvas.addEventListener("pointermove", e => {
@@ -48,11 +49,22 @@ class SignaturePad {
     this.redraw();
   }
 
+  // Restoring progress: put saved strokes back
+  load(strokes) {
+    if (!Array.isArray(strokes) || !strokes.length) return;
+    this.strokes = strokes;
+    $("#signHint").hidden = true;
+    $("#signClear").hidden = false;
+    this.redraw();
+    this.onChange(this.signed());
+  }
+
   signed() { return this.strokes.reduce((n, s) => n + s.length, 0) >= 8; }
 
   clear() {
     this.strokes = [];
     $("#signHint").hidden = false;
+    $("#signClear").hidden = true;
     this.redraw();
     this.onChange(false);
   }

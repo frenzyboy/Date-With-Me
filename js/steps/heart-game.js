@@ -18,6 +18,7 @@ class HeartGame {
     this.w = 0; this.h = 0;
     this.mascot = new Mascot($("#bearGame"), "nervous");
     $("#gameSub").textContent = fill(this.cfg.intro);
+    this.showRecord(this.cfg.record);
     $("#gameStart").addEventListener("click", () => this.start());
     this.cv.addEventListener("pointerdown", e => this.tap(e));
     window.addEventListener("resize", () => this.resize());
@@ -41,6 +42,7 @@ class HeartGame {
     const overlay = $("#gameOverlay"), title = $("#gameTitle");
     $("#gameStart").hidden = true;
     $("#gameSub").hidden = true;
+    $("#gameRecord").hidden = true;
     this.mascot.set("nervous");
     for (const n of ["3", "2", "1", "Go! 💘"]) {
       title.textContent = n;
@@ -102,6 +104,7 @@ class HeartGame {
     this.score += hit.value;
     this.pops.push({ x: hit.x, y: hit.y, text: "+" + hit.value, t: 0 });
     this.mascot.set("happy");
+    this.app.sfx.blip();
     clearTimeout(this.moodTimer);
     this.moodTimer = setTimeout(() => { if (this.running) this.mascot.set("nervous"); }, 500);
     try { navigator.vibrate && navigator.vibrate(12); } catch {}
@@ -141,12 +144,41 @@ class HeartGame {
     $("#gameTitle").textContent = fill(this.cfg.badge);
     $("#gameSub").textContent = fill(text);
     $("#gameSub").hidden = false;
+    this.compareRecord(this.score);
     $("#gameStart").textContent = "Play again 🔁";
     $("#gameStart").hidden = false;
     $("#gameOverlay").hidden = false;
     restart($("#gameTitle"), "pop");
     this.mascot.set("happy");
     this.app.confetti.burst(70);
+    $("#gameNext").hidden = false;
+    $("#gameNext").disabled = false;
+  }
+
+  // {me}'s own record (CONFIG.game.myBest): shown before the first round, compared after each one
+  showRecord(text) {
+    const el = $("#gameRecord"), best = this.cfg.myBest;
+    el.hidden = !(text && best);
+    if (!el.hidden) el.textContent = fill(text).replaceAll("{best}", best);
+  }
+  compareRecord(score) {
+    const best = this.cfg.myBest;
+    if (!best) return;
+    const beat = score > best;
+    this.showRecord(beat ? this.cfg.beatRecord : score === best ? this.cfg.tieRecord : this.cfg.underRecord);
+    $("#gameRecord").classList.toggle("beat", beat);
+    if (beat) restart($("#gameRecord"), "pop");
+  }
+
+  // Restoring progress: show the finished state with her best score
+  restore(best) {
+    this.best = best;
+    this.app.state.hearts = best;
+    $("#gameTitle").textContent = fill(this.cfg.badge);
+    $("#gameSub").textContent = this.label();
+    this.compareRecord(best);
+    $("#gameStart").textContent = "Play again 🔁";
+    this.mascot.set("happy");
     $("#gameNext").hidden = false;
     $("#gameNext").disabled = false;
   }

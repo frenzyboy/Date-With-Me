@@ -1,4 +1,4 @@
-> **Status (2026-11-26):** Part 1 is built — slower pacing, security checkpoint with the bouncer bear (answer: Christina, hint "C"), angry/think/suspicious/shocked bear moods, class-based code, review fixes. Part 2 extras are not built yet.
+> **Status (2026-11-26):** Part 1 is built — slower pacing, security checkpoint with the bouncer bear (answer: Christina, hint "C"), angry/think/suspicious/shocked bear moods, class-based code, review fixes. Hashing the answer is done too. Part 2: everything is built except "Know when she says Yes". A "secret room" home page after the ticket was added later (not from this plan).
 
 # Plan v2: slower, sillier, better organized
 
@@ -11,13 +11,13 @@ Tick the boxes you want. Anything left unticked won't be built.
 ### 1. Slow it down so it doesn't feel rushed
 Only the emotional moments get slower. The boring form steps stay quick, so she doesn't get bored.
 
-- [ ] **Typewriter text:** headings type out letter by letter (about 40 ms per letter), and buttons fade in only after the text finishes.
-- [ ] **Slower card change:** a 0.45s slide becomes about 0.8s, plus a short "Saving your answer…" pause (about 0.7s) between steps.
-- [ ] **Slower processing (step 6):** each line takes about 1.5s instead of 0.65s, with animated dots ("Calculating chemistry . . .").
-- [ ] **New "nervous pause" screen before the big question:** "Hold on… Gabriel needs a moment to be brave 😳". The bear takes a deep breath (about 3s).
-- [ ] **The question appears in two parts:** "So, [name]…", a 1.5s pause, then "will you go on this date with me? 💌".
-- [ ] **Longer celebration before the ticket:** about 2.2s becomes about 4s, so she can enjoy the happy bear.
-- [ ] **One place to adjust speed:** `CONFIG.speed = 1` (try 1.5 for slower or 0.7 for faster), so you can tune everything with one number.
+- [x] **Typewriter text:** headings type out letter by letter (about 40 ms per letter), and buttons fade in only after the text finishes.
+- [x] **Slower card change:** a 0.45s slide becomes about 0.8s, plus a short "Saving your answer…" pause (about 0.7s) between steps.
+- [x] **Slower processing (step 6):** each line takes about 1.5s instead of 0.65s, with animated dots ("Calculating chemistry . . .").
+- [x] **New "nervous pause" screen before the big question:** "Hold on… Gabriel needs a moment to be brave 😳". The bear takes a deep breath (about 3s).
+- [x] **The question appears in two parts:** "So, [name]…", a 1.5s pause, then "will you go on this date with me? 💌".
+- [x] **Longer celebration before the ticket:** about 2.2s becomes about 4s, so she can enjoy the happy bear.
+- [x] **One place to adjust speed:** `CONFIG.speed = 1` (try 1.5 for slower or 0.7 for faster), so you can tune everything with one number.
 
 ### 2. New silly welcome page: "Security checkpoint"
 The bear becomes a bouncer, with sunglasses and an "OFFICIAL" badge, guarding the page.
@@ -82,12 +82,12 @@ A green **✔ VERIFIED** stamp lands. The bear takes off its sunglasses, hops an
 - 1 to 2 letters off counts as "almost": a friendly nudge, not anger.
 - All the waits use `CONFIG.speed`, so you can make them slower or faster.
 
-> ⚠️ Note: anyone who opens the page's source code could see the answer. That's fine for a joke. If you want, it can be stored scrambled (hashed) instead. Tick here: [ ]
+> ⚠️ Note: anyone who opens the page's source code could see the answer. That's fine for a joke. If you want, it can be stored scrambled (hashed) instead. Tick here: [x] *(done: the build swaps the name for hashes)*
 
 ### 3. The angry / happy "GIF"
 Pick **one**:
-- [ ] **A (recommended): animated bear (already in the page) with a new "angry" mood.** No files to download, it loads instantly, works offline and matches the style. Moods: nervous → angry → happy → sad.
-- [ ] **B: real GIF files.** You put e.g. `images/angry.gif` and `images/happy.gif` in the folder (from Tenor/Giphy, or your own). The page swaps between them. Keep each GIF under about 2 MB so it loads fast on mobile data.
+- [x] **A (recommended): animated bear (already in the page) with a new "angry" mood.** No files to download, it loads instantly, works offline and matches the style. Moods: nervous → angry → happy → sad.
+- [ ] **B: real GIF files.** *(not chosen, went with A)* You put e.g. `images/angry.gif` and `images/happy.gif` in the folder (from Tenor/Giphy, or your own). The page swaps between them. Keep each GIF under about 2 MB so it loads fast on mobile data.
 
 ### 4. Organize the code with simple classes (OOP)
 It stays **one file** (`index.html`), split into clear sections and small classes:
@@ -107,7 +107,7 @@ It stays **one file** (`index.html`), split into clear sections and small classe
 | `Confetti` | confetti and hearts |
 
 Honest note: the file won't get much *shorter* (the features are the same), but each thing will be in **one named place**, so it's easy to find and change.
-- [ ] Optional: split the JS into separate files (`js/mascot.js` etc.). It's cleaner, but it's no longer a single file.
+- [x] Optional: split the JS into separate files (`js/mascot.js` etc.). It's cleaner, but it's no longer a single file.
 
 ### 5. Fixes from the review (small, included for free)
 - Music starts on the first tap on phones (adds `click`/`touchend`).
@@ -120,34 +120,34 @@ Honest note: the file won't get much *shorter* (the features are the same), but 
 ## Part 2 – Extra ideas (optional, tick what you like)
 
 **Before the booking**
-- [ ] **Envelope intro:** "You have 1 new letter 💌". She taps it, the envelope opens and the checkpoint comes out. It sets a slow, sweet mood.
-- [ ] **"How well do you know Gabriel?" mini quiz:** 3 silly questions where every answer is "correct" ("What's Gabriel's favorite thing? a) food b) sleep c) YOU ✔").
+- [x] **Envelope intro:** "You have 1 new letter 💌". She taps it, the envelope opens and the checkpoint comes out. It sets a slow, sweet mood.
+- [x] **"How well do you know Gabriel?" mini quiz:** *(built in Plan v3 as step 4, with 5 real questions about her)* 3 silly questions where every answer is "correct" ("What's Gabriel's favorite thing? a) food b) sleep c) YOU ✔").
 
 **During the booking**
-- [ ] **The bear walks with her through every step** (small, in the corner), reacting to her choices (drools at street food, gets scared at "Surprise me").
-- [ ] **More dramatic "No":** each try, the bear gets sadder, then small rain clouds appear 🌧️, then the bear holds a "please 🥺" sign.
-- [ ] **Small sound effects** (pop on tiles, stamp "thunk" on APPROVED). They follow the mute button.
+- [x] **The bear walks with her through every step** (small, in the corner), reacting to her choices (drools at street food, gets scared at "Surprise me").
+- [x] **More dramatic "No":** each try, the bear gets sadder, then small rain clouds appear 🌧️, then the bear holds a "please 🥺" sign.
+- [x] **Small sound effects** (pop on tiles, stamp "thunk" on APPROVED). They follow the mute button.
 
 **After she says Yes**
-- [ ] **A short love letter** that types itself out under the ticket (you write the text in `CONFIG`).
-- [ ] **Countdown:** "Our date is in 27 days, 4 hours 💖".
-- [ ] **Add to calendar button:** downloads a calendar event for the chosen date and time.
-- [ ] **Share button:** sends the ticket image straight to Messenger/WhatsApp from her phone.
-- [ ] **"Reasons I like you" flip cards:** tap to flip, 5 to 10 cards you write.
+- [x] **A short love letter** *(in the secret room, sealed in an envelope)* that types itself out under the ticket (you write the text in `CONFIG`).
+- [x] **Countdown:** "Our date is in 27 days, 4 hours 💖".
+- [x] **Add to calendar button:** downloads a calendar event for the chosen date and time.
+- [x] **Share button:** *(optional: CONFIG.share.enabled, WhatsApp number optional)* sends the ticket image straight to Messenger/WhatsApp from her phone.
+- [x] **"Reasons I like you" flip cards:** tap to flip, 5 to 10 cards you write.
 - [ ] **Know when she says Yes:** on claude.ai the page can save her answer so you can check it (no need to wait for the screenshot). *Only works when hosted on claude.ai.*
 
 **Small but nice**
-- [ ] **Remember progress:** if she accidentally refreshes, she continues where she left off.
-- [ ] **Secret easter egg:** tap the bear 10 times and a hidden message appears.
+- [x] **Remember progress:** if she accidentally refreshes, she continues where she left off.
+- [x] **Secret easter egg:** tap the bear 10 times and a hidden message appears.
 
 ---
 
 ## Questions for you
 1. ~~"Second name"~~ ✔ **Christina**
-2. **Hint letter:** OK to show "starts with C" after 3 wrong tries?
-3. **GIF:** option A (bear) or B (your own GIF files)?
+2. ~~**Hint letter**~~ ✔ yes, "starts with C" after 3 wrong tries
+3. ~~**GIF**~~ ✔ option A, the animated bear
 4. For the love letter and flip cards, will you write the text, or should I draft it for you to edit?
-5. **Her first name:** the welcome page now asks for her second name. Should step 2 still ask her to type her first name, or should the ticket just say "Christina"?
+5. ~~**Her first name**~~ ✔ step 2 asks her to type it
 
 ## Build order
 1. Reorganize into classes, with no visible change (safe base).

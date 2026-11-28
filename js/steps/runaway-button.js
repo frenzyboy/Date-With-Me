@@ -30,9 +30,11 @@ class RunawayButton {
     if (no.dataset.converted || no.disabled) return;
     if (e) e.preventDefault();
     this.dodges++;
-    this.mascot.set("sad");
+    // Sadder every time: sad → sad with a rain cloud (3+) → rain cloud and a "please" sign (5+)
+    const extra = this.dodges >= 5 ? "rain plead" : this.dodges >= 3 ? "rain" : "";
+    this.mascot.set("sad", extra);
     clearTimeout(this.timer);
-    this.timer = setTimeout(() => { if (!this.app.answered) this.mascot.set("nervous"); }, 1400);
+    if (this.dodges < 3) this.timer = setTimeout(() => { if (!this.app.answered) this.mascot.set("nervous"); }, 1400);
     this.plead.textContent = this.pleas[Math.min(this.dodges - 1, this.pleas.length - 1)];
     const maxScale = window.innerWidth < 420 ? 1.3 : 1.6;
     this.yes.style.transform = `scale(${Math.min(1 + this.dodges * 0.06, maxScale)})`;
@@ -65,6 +67,6 @@ class RunawayButton {
     this.yes.disabled = true;
     this.yes.style.transform = "";
     this.yes.textContent = "Yay!!! 💖";
-    this.plead.textContent = "The bear is very, very happy.";
+    this.plead.textContent = fill("{Bear} is very, very happy.");
   }
 }

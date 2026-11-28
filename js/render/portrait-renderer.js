@@ -16,8 +16,29 @@ class PortraitRenderer {
 
   pick(file) {
     if (!file || !file.type.startsWith("image/")) return;
-    if (this.url) URL.revokeObjectURL(this.url);
-    this.url = URL.createObjectURL(file);
+    if (this.url && this.url.startsWith("blob:")) URL.revokeObjectURL(this.url);
+    this.use(URL.createObjectURL(file));
+    this.keep();
+  }
+
+  // A smaller JPEG copy of the selfie, kept so it survives a refresh (see Progress)
+  async keep() {
+    this.saved = null;
+    try {
+      const img = new Image();
+      img.src = this.url;
+      await img.decode();
+      const max = 1000, k = Math.min(1, max / Math.max(img.naturalWidth, img.naturalHeight));
+      const c = document.createElement("canvas");
+      c.width = Math.round(img.naturalWidth * k); c.height = Math.round(img.naturalHeight * k);
+      c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+      this.saved = c.toDataURL("image/jpeg", 0.82);
+    } catch {}
+  }
+
+  // Show a photo (a blob: or data: url) as her selfie
+  use(url) {
+    this.url = url;
     this.ready = false;
     const prev = $("#selfiePreview");
     prev.src = this.url; prev.hidden = false;

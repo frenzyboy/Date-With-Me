@@ -37,12 +37,18 @@ class MoodSliders {
       if (announce) {
         restart(value, "bump");
         this.note.textContent = fill(m.replies[i]);
+        if (i === m.stops.length - 1) this.app.buddy.react("misc", "moodMax");
+        else if (i === 0) this.app.buddy.react("misc", "moodMin");
       }
     };
+    this.setters = this.setters || {};
+    this.setters[m.id] = i => { input.value = i; update(false); };
     input.addEventListener("input", () => update(true));
     update(false);
     return box;
   }
+
+  set(id, i) { if (this.setters[id] && i != null) this.setters[id](i); }
 
   label(id) {
     const m = CONFIG.moods.find(x => x.id === id);

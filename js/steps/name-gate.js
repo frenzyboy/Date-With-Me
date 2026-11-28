@@ -29,6 +29,17 @@ class NameGate {
     fresh ? this.app.pacer.reveal(parts) : this.app.pacer.show(parts);
   }
 
+  // Restoring progress: she already got in, so show the welcome notice
+  pass() {
+    this.passed = true;
+    this.mascot.set("happy");
+    this.say(fill(CONFIG.gate.welcome), "happy");
+    $$(".js-second").forEach(el => el.textContent = RUNTIME.secondName);
+    $$(".gate-part", this.sec).forEach(e => e.hidden = true);
+    $("#gateEyebrow").textContent = "Official notice · Access granted";
+    $$(".welcome-part", this.sec).forEach(e => e.hidden = false);
+  }
+
   // ---- what the bear says
   say(text, mood = "", thinking = false) {
     this.bubbleEl.innerHTML = "";
@@ -49,12 +60,11 @@ class NameGate {
     this.verifyBtn.disabled = on;
   }
 
-  // "yes" = correct, "close" = 1–2 letters off, "no" = wrong
+  // "yes" = correct, "close" = 1–2 letters off, "no" = wrong (checked against CONFIG.NAME_LOCK hashes)
   judge(raw) {
-    const target = normalizeName(CONFIG.SECOND_NAME), typed = normalizeName(raw);
-    if (` ${typed} `.includes(` ${target} `) || typed.replace(/ /g, "") === target.replace(/ /g, "")) return "yes";
-    const near = [typed, ...typed.split(" ")].some(w => w.length >= 3 && editDistance(w, target) <= 2);
-    return near && target.length >= 4 ? "close" : "no";
+    const r = NameLock.check(raw, CONFIG.NAME_LOCK);
+    if (r.result === "yes") RUNTIME.secondName = r.name;
+    return r.result;
   }
 
   async verify() {
@@ -120,6 +130,7 @@ class NameGate {
     const lines = CONFIG.gate.wrong;
     this.mascot.set("angry");
     this.stamp("✖ DENIED", "bad");
+    this.app.sfx.thunk();
     restart(this.sec, "shake");
     this.say(lines[(this.wrongTries - 1) % lines.length], "angry");
     if (this.wrongTries >= 3) this.note.textContent = fill(CONFIG.gate.hint);
@@ -167,6 +178,8 @@ class NameGate {
     this.passed = true;
     this.mascot.set("happy");
     this.stamp("✔ VERIFIED", "good");
+    this.app.sfx.thunk();
+    $$(".js-second").forEach(el => el.textContent = RUNTIME.secondName);
     this.say(fill(CONFIG.gate.welcome), "happy");
     this.app.confetti.burst(70);
     await pacer.wait(3200);

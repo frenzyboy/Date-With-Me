@@ -102,6 +102,21 @@ class Mascot {
         <rect x="118" y="155" width="8" height="5" rx="1.5" fill="#ffd166"/>
       </g>
 
+      <!-- extras for a very sad "No": a rain cloud ("rain") and a sign held up ("plead") -->
+      <g class="f x-rain">
+        <g class="rain-drops" stroke="${TEAR}" stroke-width="3" stroke-linecap="round">
+          <path class="drop" d="M70 14 l-3 9"/><path class="drop" d="M92 18 l-3 9"/><path class="drop" d="M114 14 l-3 9"/><path class="drop" d="M134 18 l-3 9"/>
+        </g>
+        <g class="cloud" fill="#9aa3b5">
+          <ellipse cx="100" cy="-2" rx="46" ry="15"/><circle cx="80" cy="-10" r="16"/><circle cx="104" cy="-18" r="20"/><circle cx="126" cy="-8" r="14"/>
+        </g>
+      </g>
+      <g class="f x-sign">
+        <path d="M100 160 V198" stroke="#a86b45" stroke-width="5"/>
+        <rect x="46" y="130" width="108" height="32" rx="6" fill="#fff" stroke="${INK}" stroke-width="3"/>
+        <text x="100" y="152" text-anchor="middle" font-size="16" font-weight="800" font-family="Nunito, sans-serif" fill="${INK}">please 🥺</text>
+      </g>
+
       <circle cx="80" cy="168" r="11" fill="${FUR2}"/><circle cx="120" cy="168" r="11" fill="${FUR2}"/>
 
       <!-- shy: paws over the eyes -->

@@ -52,6 +52,8 @@ class TicketRenderer {
       ["DATE", dateLong, "Temporary hold · can be rescheduled"],
       ["TIME", `${state.slot.emo} ${state.slot.t}`],
       ["HEART CATCHER", this.app.game.label()],
+      ["PICKUP LINES", this.app.pickup.label()],
+      ["BEAR ON DUTY", `🐻 ${RUNTIME.bearName || "The bear"}`],
       ...CONFIG.moods.map(m => [m.label.toUpperCase(), this.app.moods.label(m.id)]),
       ["COMPATIBILITY", this.app.compatText()],
       ["REFUNDS", "No longer available 😌"]

@@ -1,3 +1,5 @@
+> **Status (2026-11-26):** Fully built, then extended by [PLAN-V2.md](PLAN-V2.md) and [PLAN-V3.md](PLAN-V3.md). It is no longer a single file: CSS/JS live in `css/` and `js/`, and `tools/build.mjs` joins them for publishing.
+
 # Plan: "Temporary Date Booking" page
 
 ## Context

@@ -10,6 +10,7 @@ class ChoiceTiles {
     const b = document.createElement("button");
     b.type = "button";
     b.className = "tile" + (row ? " row" : "");
+    b.dataset.id = it.id;
     b.setAttribute("aria-pressed", "false");
     b.innerHTML = `<span class="emo" aria-hidden="true">${it.emo}</span><span class="t">${it.t}</span><span class="s">${it.s}</span>`;
     b.addEventListener("click", () => {
@@ -25,5 +26,10 @@ class ChoiceTiles {
       onPick(it);
     });
     return b;
+  }
+  // Picks a tile by id, as if she tapped it (used when restoring progress)
+  pick(id) {
+    const b = $$(".tile", this.container).find(t => t.dataset.id === String(id));
+    if (b) b.click();
   }
 }

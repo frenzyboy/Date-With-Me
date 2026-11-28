@@ -46,6 +46,22 @@ class Quiz {
     s.className = "qstamp " + kind;
     s.textContent = text;
     tile.appendChild(s);
+    this.app.sfx.thunk();
+  }
+
+  // Restoring progress: jump straight to the finished result
+  restore(score) {
+    this.score = score;
+    this.app.state.quizScore = score;
+    this.app.state.quizTotal = this.items.length;
+    $("#quizCard").hidden = true;
+    $("#quizResult").hidden = false;
+    this.resultBear.set("happy");
+    $("#quizPercent").textContent = CONFIG.quizResult.percent;
+    $("#quizResultText").textContent = fill(CONFIG.quizResult.text);
+    $("#quizScore").textContent = fill(CONFIG.quizResult.score).replace("{score}", score).replace("{total}", this.items.length);
+    $("#quizNext").hidden = false;
+    $("#quizNext").disabled = false;
   }
 
   async answer(k, btn) {
